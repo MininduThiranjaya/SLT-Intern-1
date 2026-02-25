@@ -1,4 +1,4 @@
-const {User, Role, ForgetPassword} = require('../models/index')
+const {User, Role, ForgetPassword, Bus, BusSchedule} = require('../models/index')
 const {generateWebToken, verifyToken} = require("../auth/auth")
 const crypto = require('crypto')
 const bcrypt = require('bcrypt')
@@ -97,13 +97,12 @@ async function forgetPasswordReset(req) {
 }
 
 // user registration
-
 async function userRegistration(req) {
     try {
         const {userName, email, password, phoneNumber, userRole} = req.body
         if(!userName || !email || !password || !phoneNumber || !userRole ) return {statusCode: 401, status: false, response: "Required all data...", data: null}
         const existingUser = await User.findOne({ where: { email } })
-        if (existingUser) return ({ statusCode: 401, status: false, response: "Email already registered", data: null})
+        if (existingUser) return ({ statusCode: 401, status: false, message: "Email already registered", data: null})
         const hashedPassword = await bcrypt.hash(password, 10)
         const newUser = await User.create({
             userName,
@@ -114,25 +113,72 @@ async function userRegistration(req) {
         const foundRoles = await Role.findOne({ where: { name: userRole } })
         await newUser.setRoles(foundRoles)
         const {id: _id, password: _pass, ...userData} = newUser.toJSON()
-        return {statusCode: 200, status: true, message: "User registration successfull", response: userData}
+        return {statusCode: 200, status: true, message: "User registration successfull", data: userData}
     }
     catch(e) {
         console.log(e)
-        return {statusCode: 500, status: false, response: "Internal server error"};
+        return {statusCode: 500, status: false, message: "Internal server error", data: null};
     }
 }
 
+// verify user
 async function verifyUser(req) {
-    const email = req.user.email;
-    if(!email) return {statusCode: 401, status: false, message: "Required all data...", data: null}
-    const tempUser = await User.findOne({where: {email},include: [
+    try{
+        const email = req.user.email;
+        if(!email) return {statusCode: 401, status: false, message: "Required all data...", data: null}
+        const tempUser = await User.findOne({where: {email},include: [
             { model: Role, attributes: ['name'] }
-    ]})
-    if(!tempUser) return {statusCode: 404, status: false, message: "User not found...", data: null}
-    const userRole = tempUser.Roles.map(role => role.name)
-    const {id: _id, password: _pass, Roles: _role, ...userData} = tempUser.toJSON()
-    return {statusCode: 200, status: true, message: "User authenticate successful", data: {...userData, userRole}}
+        ]})
+        if(!tempUser) return {statusCode: 404, status: false, message: "User not found...", data: null}
+        const userRole = tempUser.Roles.map(role => role.name)
+        const {id: _id, password: _pass, Roles: _role, ...userData} = tempUser.toJSON()
+        return {statusCode: 200, status: true, message: "User authenticate successful", data: {...userData, userRole}}
+    }
+    catch(e) {
+        console.log(e)
+        return {statusCode: 500, status: false, message: "Internal server error", data: null};
+    }
 
 }
 
-module.exports = {userLogin, forgetPassword, forgetPasswordReset, userRegistration, verifyUser}
+// get all buses
+async function getBuses() {
+    try {
+        const tempBuses = await Bus.findAll({
+            attributes: {
+                exclude: ['id', 'createdAt', 'updatedAt']
+            }
+        })
+        if(tempBuses.length == 0) return {statusCode: 404, status: false, message: "No bus found", data: null}
+        return {statusCode: 200, status: true, message: "Buses found", data: tempBuses}
+    }
+    catch(e) {
+         console.log(e)
+        return {statusCode: 500, status: false, message: "Internal server error", data: null};
+    }
+}
+
+// get bus schedule
+async function getSchedule() {
+    try {
+        const busesWithSchedule = await Bus.findAll({
+            attributes: {
+                exclude: ['id', 'updatedAt', 'createdAt']
+            },
+            include: {
+                model: BusSchedule,
+                attributes: {
+                    exclude: ['busId', 'updatedAt', 'createdAt']
+                }
+            }
+        })
+        if(busesWithSchedule.length == 0) return {statusCode: 200, status: true, message: "No bus schedule", data: null}
+        return {statusCode: 200, status: true, message: "Bus schedules found", data: busesWithSchedule}
+    }
+    catch(e) {
+        console.log(e)
+        return {statusCode: 500, status: false, message: "Internal server error", data: null};
+    }
+}
+
+module.exports = {userLogin, forgetPassword, forgetPasswordReset, userRegistration, verifyUser, getBuses, getSchedule}
