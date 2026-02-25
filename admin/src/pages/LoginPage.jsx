@@ -1,12 +1,20 @@
 import { useState } from "react";
-import { Bus, Mail, Lock, Eye, EyeOff, AlertCircle, ShieldCheck } from "lucide-react";
+import {
+  Bus,
+  Mail,
+  Lock,
+  Eye,
+  EyeOff,
+  AlertCircle,
+  ShieldCheck,
+} from "lucide-react";
 import { fontSyne, fontDM } from "../assets/shared";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 import API from "../apis/apis";
-import axios from 'axios'
+import axios from "axios";
 
 export default function LoginPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [email, setEmail] = useState("admin@bus.com");
   const [password, setPassword] = useState("admin123");
   const [showPw, setShowPw] = useState(false);
@@ -14,30 +22,28 @@ export default function LoginPage() {
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
-    try{
-
+    try {
       e.preventDefault();
       setError("");
-      
-      if(!email && !password) {
-        setError('All fields are required')
-        return
+
+      if (!email && !password) {
+        setError("All fields are required");
+        return;
       }
-      
+
       setStatus("loading");
       const res = await axios.post(API.common.login, {
         email: email,
-        password: password
-      })
-      console.log(res)
-      if(res.data.result.userRole.includes('admin')) {
-        localStorage.setItem('userToken', res.data.result.token)
-        navigate('/dashboard')
+        password: password,
+      });
+      console.log(res);
+      if (res.data.result.userRole.includes("admin")) {
+        localStorage.setItem("userToken", res.data.result.token);
+        navigate("/dashboard");
       }
-      setStatus('idle')
-    }
-    catch(e) {
-      console.log(e)
+      setStatus("idle");
+    } catch (e) {
+      console.log(e);
       setStatus("idle");
     }
   };
@@ -51,13 +57,15 @@ export default function LoginPage() {
 
       <div className="relative z-10 w-full max-w-[460px]">
         <div className="bg-[#1c1f2e] border border-[#2a2d3e] backdrop-blur-xl rounded-3xl shadow-2xl p-10">
-  
           <div className="flex items-center gap-3 mb-9">
             <div className="w-12 h-12 bg-yellow-400 rounded-2xl flex items-center justify-center shadow-[0_4px_18px_rgba(251,191,36,0.5)]">
               <Bus size={24} className="text-[#0d0f1a]" />
             </div>
             <div>
-              <div className="font-extrabold text-[1.3rem] text-yellow-500 tracking-tight" style={fontSyne}>
+              <div
+                className="font-extrabold text-[1.3rem] text-yellow-500 tracking-tight"
+                style={fontSyne}
+              >
                 RideBook
               </div>
               <div className="text-[0.68rem] text-yellow-400 tracking-[0.1em] uppercase mt-0.5">
@@ -68,10 +76,15 @@ export default function LoginPage() {
 
           <div className="flex items-center gap-2 bg-yellow-400/10 border border-yellow-400/30 rounded-xl px-4 py-2.5 mb-7">
             <ShieldCheck size={15} className="text-yellow-400 flex-shrink-0" />
-            <span className="text-xs text-yellow-300 font-medium">Administrator Access Only</span>
+            <span className="text-xs text-yellow-300 font-medium">
+              Administrator Access Only
+            </span>
           </div>
 
-          <h1 className="font-bold text-3xl text-yellow-400 mb-1.5" style={fontSyne}>
+          <h1
+            className="font-bold text-3xl text-yellow-400 mb-1.5"
+            style={fontSyne}
+          >
             Admin Sign In
           </h1>
           <p className="text-sm text-[#7a7e96] mb-8">
@@ -87,9 +100,14 @@ export default function LoginPage() {
 
           <form onSubmit={handleSubmit}>
             <div className="mb-5">
-              <label className="block text-sm font-medium text-[#9a9eb8] mb-2">Email Address</label>
+              <label className="block text-sm font-medium text-[#9a9eb8] mb-2">
+                Email Address
+              </label>
               <div className="relative">
-                <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a9eb8]" />
+                <Mail
+                  size={16}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a9eb8]"
+                />
                 <input
                   type="email"
                   value={email}
@@ -102,9 +120,14 @@ export default function LoginPage() {
             </div>
 
             <div className="mb-7">
-              <label className="block text-sm font-medium text-[#9a9eb8] mb-2">Password</label>
+              <label className="block text-sm font-medium text-[#9a9eb8] mb-2">
+                Password
+              </label>
               <div className="relative">
-                <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a9eb8]" />
+                <Lock
+                  size={16}
+                  className="absolute left-4 top-1/2 -translate-y-1/2 text-[#9a9eb8]"
+                />
                 <input
                   type={showPw ? "text" : "password"}
                   value={password}
