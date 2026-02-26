@@ -17,7 +17,10 @@ const API = {
         addBus: `${commonUrl}admin/add-bus`,
         deleteBus: `${commonUrl}admin/delete-bus`,
         addSchedule: `${commonUrl}admin/create-new-schedule`,
-        deleteSchedule: `${commonUrl}admin/delete-schedule`
+        deleteSchedule: `${commonUrl}admin/delete-schedule`,
+        getUsers: `${commonUrl}admin/get-users`,
+        getAllBookings: `${commonUrl}admin/get-all-bookings`,
+        updateBookingStatus: `${commonUrl}admin/update-booking-status`
     }
 }
 
