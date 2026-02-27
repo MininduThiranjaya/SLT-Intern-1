@@ -6,11 +6,11 @@ const Bus = seqConnection.define("Bus", {
     busNumber: { type: DataTypes.STRING(20), allowNull: false, unique: true},
     from: { type: DataTypes.STRING(100), allowNull: false },
     to: { type: DataTypes.STRING(100), allowNull: false },
-    departure: { type: DataTypes.DATE, allowNull: false },
-    arrival: { type: DataTypes.DATE, allowNull: false },
+    departure: { type: DataTypes.TIME, allowNull: false },
+    arrival: { type: DataTypes.TIME, allowNull: false },
     numberOfSeats: { type: DataTypes.INTEGER, allowNull: false },
     price: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
-    isAvailable: { type: DataTypes.BOOLEAN, allowNull: false, defaultValue: true },
+    isAvailable: { type: DataTypes.STRING, allowNull: false },
 }, { timestamps: true });
 
 module.exports = Bus
