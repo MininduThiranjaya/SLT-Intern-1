@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { fontSyne } from "../assets/shared";
 import axios from "axios";
 import API from "../apis/apis";
+import toast from "react-hot-toast";
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -31,11 +32,15 @@ export default function LoginPage() {
       console.log(res);
       if (res.data.result.userRole.includes("passenger")) {
         localStorage.setItem("userToken", res.data.result.token);
+        toast.success(res.data.message)
         navigate("/dashboard");
       }
-      setStatus("idle");
+      else {
+        toast.error(res.data.message)
+        setStatus("idle");
+      }
     } catch (e) {
-      console.log(e);
+      toast.error(e.response.data.message)
       setStatus("idle");
     }
   };

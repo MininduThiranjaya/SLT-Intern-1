@@ -3,6 +3,7 @@ import React, { useState } from "react"
 import axios from "axios"
 import API from "../apis/apis"
 import { useNavigate } from "react-router-dom"
+import toast from "react-hot-toast"
 
 export default function ForgetPasswordPage() {
   const navigate = useNavigate();
@@ -19,13 +20,16 @@ export default function ForgetPasswordPage() {
   const [isResettingPassword, setIsResettingPassword] = useState(false);
 
   const handleSendVerificationCode = async () => {
-    if (!email) { alert('Please enter your email address'); return; }
+    if (!email) { toast.error('Please enter your email address'); return; }
     setIsSendingCode(true);
     try {
-      await axios.post(API.common.forget_password_send_mail, { email });
+      const res = await axios.post(API.common.forget_password_send_mail, { email });
+      if(res.data.status) {
+        toast.success(res.data.message)
+      }
       setStep(2);
     } catch (error) {
-      alert('Failed to send verification code. Please try again.');
+      toast.error('Failed to send verification code. Please try again.');
     } finally {
       setIsSendingCode(false);
     }
@@ -36,11 +40,13 @@ export default function ForgetPasswordPage() {
     if (newPassword !== confirmNewPassword) { alert('Passwords do not match!'); return; }
     setIsResettingPassword(true);
     try {
-      await axios.post(API.common.forget_password_reset, { email, token: verificationCode, password: newPassword });
-      alert('Password has been reset successfully!');
-      navigate('/');
+      const res = await axios.post(API.common.forget_password_reset, { email, token: verificationCode, password: newPassword });
+      if(res.data.status) {
+        toast.success("Password has been reset successfully")
+        navigate('/');
+      }
     } catch (error) {
-      alert('Invalid code or failed to reset password. Please try again.');
+      toast.error('Invalid code or failed to reset password. Please try again.');
     } finally {
       setIsResettingPassword(false);
     }
@@ -121,7 +127,7 @@ export default function ForgetPasswordPage() {
                 <button
                   onClick={handleSendVerificationCode}
                   disabled={isSendingCode}
-                  className="w-full w-full px-4 py-2 rounded-xl font-semibold
+                  className="w-full px-4 py-2 rounded-xl font-semibold
                      bg-yellow-400 text-[#0d0f1a]
                      hover:bg-yellow-300
                      transition-all duration-200

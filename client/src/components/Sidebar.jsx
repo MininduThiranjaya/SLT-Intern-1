@@ -1,4 +1,5 @@
 import { Bus, Home, Ticket, User, LogOut, X } from "lucide-react";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
 const tabs = [
@@ -12,6 +13,7 @@ export function Sidebar({ activeTab, setActiveTab, currentUser }) {
   const navigate = useNavigate();
 
   const onLogout = () => {
+    toast.success("User loging out")
     localStorage.removeItem("userToken");
     navigate("/");
   };

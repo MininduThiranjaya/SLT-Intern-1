@@ -3,6 +3,7 @@ import React, { useState } from "react"
 import axios from "axios"
 import API from "../apis/apis"
 import { useNavigate } from "react-router-dom"
+import toast from "react-hot-toast"
 
 export default function RegistrationPage() {
     const navigate = useNavigate();
@@ -60,11 +61,13 @@ export default function RegistrationPage() {
                 password: formData.password,
                 userRole: "passenger"
             }
-            await axios.post(API.common.reg, tempFormData);
-            alert('Account created successfully!');
-            navigate('/');
+            const res = await axios.post(API.common.reg, tempFormData);
+            if(res.data.status){
+                toast.success('Account created successfully!');
+                navigate('/');
+            }
         } catch (error) {
-            alert('Registration failed. Please try again.');
+            toast.error('Registration failed. Please try again.');
         } finally {
             setIsSubmitting(false);
         }

@@ -15,6 +15,7 @@ import { S, fontSyne } from "../assets/shared";
 import BusSeatLayout from "../components/BusSeatLayout";
 import axios from "axios";
 import API from "../apis/apis";
+import toast from "react-hot-toast";
 
 export default function BookingPage({ currentUser }) {
   const cities = ["Colombo", "Kandy", "Galle", "Jaffna", "Matara", "Negombo"];
@@ -129,11 +130,14 @@ export default function BookingPage({ currentUser }) {
           },
         },
       );
-      console.log(res.data);
-      setBookingId("BK-" + (Math.floor(Math.random() * 90000) + 10000));
-      setStep(3);
+      if(res.data.status) {
+        toast.success(res.data.message)
+        setBookingId("BK-" + (Math.floor(Math.random() * 90000) + 10000));
+        setStep(3);
+      }
     } catch (e) {
-      console.log(e);
+      toast.error(e.response.data.message)
+      setStep(2);
     }
   };
 

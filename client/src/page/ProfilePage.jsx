@@ -3,6 +3,7 @@ import { S, fontSyne } from "../assets/shared";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import API from "../apis/apis";
+import toast from "react-hot-toast";
 
 export default function ProfilePage({ currentUser }) {
   const navigate = useNavigate();
@@ -10,6 +11,7 @@ export default function ProfilePage({ currentUser }) {
   const date = new Date(utcString);
 
   const onLogout = () => {
+    toast.success("User loging out")
     localStorage.removeItem("userToken");
     navigate("/");
   };
@@ -49,10 +51,11 @@ export default function ProfilePage({ currentUser }) {
         },
       });
       if (res.data.result) {
+        toast.success(res.data.message)
         onLogout();
       }
     } catch (e) {
-      console.log(e);
+      toast.error(e.response.data.message)
     }
   };
 

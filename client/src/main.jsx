@@ -1,6 +1,7 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import './index.css'
 
 // auth
@@ -14,6 +15,7 @@ import ForgetPasswordPage from './page/ForgetPasswordPage';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <Toaster position="top-right" reverseOrder={false} />
     <Router>
       <Routes>
         <Route path='/' element={<LoginPage/>}/>
