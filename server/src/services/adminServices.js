@@ -1,5 +1,5 @@
 const {Bus, BusSchedule, User, Role, Booking, BookingSeat} = require('../models/index')
-const { Op } = require("sequelize");
+const { Op, fn, col } = require("sequelize");
 
 // create schedule
 async function createSchedule(req) {
@@ -94,14 +94,31 @@ async function getUsers() {
     try {
         const tempUsers = await User.findAll({
             attributes: {
-                exclude: ['id', 'password', 'updatedAt']   // exclude sensitive fields
+                exclude: ['id', 'password', 'updatedAt'],
+                include: [
+                    [fn('COUNT', col('Bookings->BookingSeats.id')), 'totalSeatsBooked']
+                ]
             },
-            include: {
-                model: Role,
-                where: {
-                    name: 'passenger'
+            include: [
+                {
+                    model: Booking,
+                    attributes: [],
+                    required: false, // include users even if no bookings
+                    include: [
+                        {
+                            model: BookingSeat,
+                            attributes: [],
+                            required: false
+                        }
+                    ]
+                },
+                {
+                    model: Role,
+                    where: { name: 'passenger' },
+                    attributes: [] // we don’t need role fields
                 }
-            }
+            ],
+            group: ['User.id'], // required because of COUNT aggregate  
         });
         if(tempUsers.length == 0) return {statusCode: 200, status: true, message: "No user found", data:null }
         return {statusCode: 200, status: true, message: "Fetach all users", data: tempUsers }
