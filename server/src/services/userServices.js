@@ -1,6 +1,7 @@
 const {Bus, BusSchedule, User, BookingSeat, Booking} = require('../models/index')
 const seqConnection = require('../db/dbConnection')
 
+// search schedule
 async function searchSchedule(req) {
     try {
         const {fromCity,  toCity, travelDate} = req.body
@@ -77,6 +78,7 @@ async function searchSchedule(req) {
     }
 }
 
+// bus seat booking
 async function busSeatBooking(req) {
     try {
         const {busNumber, scheduleId, seats} = req.body
@@ -130,6 +132,8 @@ async function busSeatBooking(req) {
     }
 }
 
+
+// delete user account
 async function deleteMyAccount(req) {
     try {
         const { email } = req.user;
@@ -141,10 +145,48 @@ async function deleteMyAccount(req) {
         });
         if(isDeleted === 0) return {statusCode: 404, status: true, message: "User not found for deletion", data:null }
         return {statusCode: 200, status: true, message: "User deleted successfull", data:isDeleted }
-    } catch (error) {
+    } catch (e) {
         console.log(e)
         return {statusCode: 500, status: false, message: "Internal server error", data: null};
     }
 }
 
-module.exports = {searchSchedule, busSeatBooking, deleteMyAccount}
+// get user booking
+async function getMyBookings(req) {
+    try {
+        const{email} = req.user
+        if(!email) return {statusCode: 401, status: false, message: "All fields are required", data: null}
+        const tempAllBookings = await Booking.findAll({
+            include: [
+                {
+                    model: User,
+                    attributes: ['id', 'userName', 'email', 'phoneNumber'],
+                    where: {
+                        email: email
+                    }
+                },
+                {
+                    model:BusSchedule,
+                    include: [
+                        {
+                            model:Bus,
+                            attributes: ["busNumber", "from", "to", "departure", "arrival", 'price']
+                        }
+                    ]
+                },
+                {
+                    model: BookingSeat,
+                    attributes: ['seatNumber']
+                }
+            ],
+            order: [['createdAt', 'DESC']]
+        })
+        if(tempAllBookings.length == 0) return {statusCode: 200, status: true, message: "No user booking found", data:null }
+        return {statusCode: 200, status: true, message: "Fetach all user bookings", data: tempAllBookings }
+    } catch (e) {
+        console.log(e)
+        return {statusCode: 500, status: false, message: "Internal server error", data: null};
+    }
+}
+
+module.exports = {searchSchedule, busSeatBooking, deleteMyAccount, getMyBookings}

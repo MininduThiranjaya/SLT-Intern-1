@@ -1,5 +1,7 @@
-const {Bus,BusSchedule, User, Role, Booking, BookingSeat} = require('../models/index')
+const {Bus, BusSchedule, User, Role, Booking, BookingSeat} = require('../models/index')
+const { Op } = require("sequelize");
 
+// create schedule
 async function createSchedule(req) {
     try{
         const {busNumber, date} = req.body
@@ -28,6 +30,7 @@ async function createSchedule(req) {
     }
 }
 
+// add bus
 async function addBus(req) {
     try {
         const { busNumber, from, to, departure, arrival, numberOfSeats, price, isAvailable } = req.body;
@@ -50,6 +53,7 @@ async function addBus(req) {
     }
 }
 
+// delete bus
 async function deleteBus(req) {
     try {
         const { busNumber } = req.body;
@@ -67,6 +71,7 @@ async function deleteBus(req) {
     }
 }
 
+// delete schedule
 async function deleteSchedule(req) {
     try {
         const { id } = req.body;
@@ -84,6 +89,7 @@ async function deleteSchedule(req) {
     }
 }
 
+// get all users
 async function getUsers() {
     try {
         const tempUsers = await User.findAll({
@@ -99,12 +105,13 @@ async function getUsers() {
         });
         if(tempUsers.length == 0) return {statusCode: 200, status: true, message: "No user found", data:null }
         return {statusCode: 200, status: true, message: "Fetach all users", data: tempUsers }
-    } catch (error) {
+    } catch (e) {
         console.log(e)
         return {statusCode: 500, status: false, message: "Internal server error", data: null};
     }
 }
 
+// get all bookings
 async function getAllBookings() {
     try {
         const tempAllBookings = await Booking.findAll({
@@ -131,12 +138,13 @@ async function getAllBookings() {
         })
         if(tempAllBookings.length == 0) return {statusCode: 200, status: true, message: "No user booking found", data:null }
         return {statusCode: 200, status: true, message: "Fetach all user bookings", data: tempAllBookings }
-    } catch (error) {
+    } catch (e) {
         console.log(e)
         return {statusCode: 500, status: false, message: "Internal server error", data: null};
     }
 }
 
+// update booking status
 async function updateBookingStatus(res) {
     try {
         const {bookingId, status} = res.body
@@ -148,10 +156,70 @@ async function updateBookingStatus(res) {
         booking.status = status;
         await booking.save();
         return {statusCode: 200, status: true, message: "Booking status updated", data: null }
-    } catch (error) {
+    } catch (e) {
         console.log(e)
         return {statusCode: 500, status: false, message: "Internal server error", data: null};
     }
 }
 
-module.exports = {createSchedule, addBus, deleteBus, deleteSchedule, getUsers, getAllBookings, updateBookingStatus}
+// update bus
+async function updateBus(res) {
+    try {
+        const {busNumber, ...fieldsToUpdate} = res.body
+        if(!busNumber) return { statusCode: 401, status: false, message: "All fields are required", data: null }
+        const [updated] = await Bus.update(fieldsToUpdate, {
+            where: { busNumber },
+        });
+        if(!updated) return {statusCode: 404, status: true, message: "Bus not found for updating", data: null }
+        return {statusCode: 200, status: true, message: "Bus updated successfully", data: null }
+    } catch (e) {
+        console.log(e)
+        return {statusCode: 500, status: false, message: "Internal server error", data: null};
+    }
+}
+
+// get all stats
+async function getStats() {
+    try {
+        const now = new Date();
+        const [
+            totalBuses,
+            totalUsers,
+            totalBookings,
+            confirmedBookings,
+            pendingBookings,
+            rejectedBookings,
+            activeSchedules
+        ] = await Promise.all([
+
+            Bus.count(),
+            User.count(),
+            Booking.count(),
+            Booking.count({ where: { status: "CONFIRMED" } }),
+            Booking.count({ where: { status: "PENDING" } }),
+            Booking.count({ where: { status: "REJECTED" } }),
+            BusSchedule.count({
+                where: {
+                    scheduleDate : {
+                        [Op.gte]: now
+                    }
+                }
+            })
+        ]);
+        return {statusCode: 200, status: true, message: "All stats", data: {
+            totalBuses,
+            activeSchedules,
+            totalBookings,
+            totalUsers,
+            confirmedBookings,
+            pendingBookings,
+            rejectedBookings
+        }
+    }
+    } catch (e) {
+        console.log(e)
+        return {statusCode: 500, status: false, message: "Internal server error", data: null};
+    }
+}
+
+module.exports = {createSchedule, addBus, deleteBus, deleteSchedule, getUsers, getAllBookings, updateBookingStatus, updateBus, getStats}

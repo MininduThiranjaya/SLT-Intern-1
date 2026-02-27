@@ -1,4 +1,5 @@
-const {User, Role, ForgetPassword, Bus, BusSchedule} = require('../models/index')
+const {User, Role, ForgetPassword, Bus, BusSchedule, Booking, BookingSeat} = require('../models/index')
+const { fn, col, Op  } = require("sequelize");
 const {generateWebToken, verifyToken} = require("../auth/auth")
 const crypto = require('crypto')
 const bcrypt = require('bcrypt')
@@ -161,16 +162,41 @@ async function getBuses() {
 // get bus schedule
 async function getSchedule() {
     try {
+        const today = new Date()
+        const todayStr = today.toISOString().split('T')[0];
         const busesWithSchedule = await Bus.findAll({
             attributes: {
                 exclude: ['id', 'updatedAt', 'createdAt']
             },
             include: {
                 model: BusSchedule,
-                attributes: {
-                    exclude: ['busId', 'updatedAt', 'createdAt']
-                }
-            }
+                attributes: [
+                    "id",
+                    "scheduleDate",
+                    [fn("COUNT", col("BusSchedules->Bookings->BookingSeats.id")), "seatsBooked"],
+                ],
+                where: {
+                    scheduleDate: {
+                        [Op.gte]: todayStr
+                    }
+                },
+                include: [
+                    {
+                        model: Booking,
+                        attributes: [],
+                        required: false,
+                        include: [
+                            {
+                                model: BookingSeat,
+                                attributes: [],
+                                required: false
+                            }
+                        ]
+                    }
+                ]
+            },
+            group: ["Bus.id", "BusSchedules.id"],
+            order: [[BusSchedule, 'scheduleDate', 'DESC']]
         })
         if(busesWithSchedule.length == 0) return {statusCode: 200, status: true, message: "No bus schedule", data: null}
         return {statusCode: 200, status: true, message: "Bus schedules found", data: busesWithSchedule}
