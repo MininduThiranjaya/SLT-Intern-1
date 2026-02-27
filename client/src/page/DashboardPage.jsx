@@ -7,7 +7,6 @@ import API from "../apis/apis";
 import BookingPage from "./BookingPage";
 import TicketsPage from "./TicketsPage";
 import ProfilePage from "./ProfilePage";
-import BusSeatLayout from "../components/BusSeatLayout";
 
 export default function DashboardPage() {
   const [activeTab, setActiveTab] = useState("booking");
@@ -63,32 +62,29 @@ export default function DashboardPage() {
 
   return (
     <div className="min-h-screen bg-[#161826]">
-      {/* Desktop Sidebar */}
+      {/* sidebar */}
       <Sidebar
         activeTab={activeTab}
         setActiveTab={setActiveTab}
         currentUser={currentUser}
-        // onLogoutRequest={onLogoutRequest}
       />
 
-      {/* Mobile Top Bar */}
+      {/* mobite top menu bar */}
       <MobileHeader
         mobileMenuOpen={mobileMenuOpen}
         setMobileMenuOpen={setMobileMenuOpen}
       />
 
-      {/* Mobile Drawer */}
+      {/* mobile drawer */}
       {mobileMenuOpen && (
         <MobileMenu
           activeTab={activeTab}
           setActiveTab={setActiveTab}
           currentUser={currentUser}
-          //   onLogoutRequest={onLogoutRequest}
-          //   onClose={() => setMobileMenuOpen(false)}
         />
       )}
 
-      {/* Main Content Area */}
+      {/* main content */}
       <main className="md:ml-64 pt-16 md:pt-0 min-h-screen">
         <div className="max-w-4xl mx-auto px-4 md:px-10 py-8 md:py-10">
           {renderPage()}
