@@ -12,6 +12,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import API from "../apis/apis";
 import axios from "axios";
+import toast from 'react-hot-toast'
 
 const navItems = [
   { key: "overview", label: "Overview", icon: LayoutDashboard },
@@ -25,6 +26,7 @@ export default function Sidebar({ active, setActive }) {
   const navigate = useNavigate();
 
   const onLogout = () => {
+    toast.success("User loging out")
     localStorage.removeItem("userToken");
     navigate("/");
   };
@@ -34,6 +36,7 @@ export default function Sidebar({ active, setActive }) {
       const token = localStorage.getItem("userToken");
       if (!token) {
         navigate("/");
+        localStorage.removeItem("userToken");
         return;
       }
       try {
@@ -47,7 +50,6 @@ export default function Sidebar({ active, setActive }) {
           navigate("/");
         }
       } catch (err) {
-        console.log(err);
         localStorage.removeItem("userToken");
         navigate("/");
       }

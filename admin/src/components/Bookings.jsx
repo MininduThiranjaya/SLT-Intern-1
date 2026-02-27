@@ -4,6 +4,7 @@ import { fontSyne, fontDM } from "../assets/shared";
 import axios from "axios";
 import API from "../apis/apis";
 import { useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast'
 
 const statusConfig = {
   CONFIRMED: {
@@ -33,6 +34,7 @@ export default function Bookings() {
     const token = localStorage.getItem("userToken");
     if (!token) {
       navigate("/");
+      localStorage.removeItem("userToken");
       return;
     }
     try {
@@ -105,10 +107,13 @@ export default function Bookings() {
         },
       );
       if (res.data.status) {
+        toast.success(res.data.message)
         featchBookings();
         fetchUser();
       }
-    } catch (e) {}
+    } catch (e) {
+      toast.error(e.response.data.message)
+    }
   };
 
   const filtered = bookings.filter((b) => {

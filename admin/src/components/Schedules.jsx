@@ -4,6 +4,7 @@ import { fontSyne, fontDM } from "../assets/shared";
 import axios from "axios";
 import API from "../apis/apis";
 import { useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast'
 
 const statusBadge = (status) => {
   const map = {
@@ -24,12 +25,12 @@ export default function Schedules() {
   const [buses, setBuses] = useState();
   const [schedules, setSchedules] = useState([]);
   const [form, setForm] = useState(emptyForm);
-  const [toast, setToast] = useState(null);
 
   const fetchUser = async () => {
     const token = localStorage.getItem("userToken");
     if (!token) {
       navigate("/");
+      localStorage.removeItem("userToken");
       return;
     }
     try {
@@ -43,7 +44,6 @@ export default function Schedules() {
         navigate("/");
       }
     } catch (err) {
-      console.error(err);
       localStorage.removeItem("userToken");
       navigate("/");
     }
@@ -71,14 +71,8 @@ export default function Schedules() {
       setBuses(busRes.data.result);
       setSchedules(schedules);
     } catch (e) {
-      console.log(e);
     }
   }
-
-  const showToast = (msg, type = "success") => {
-    setToast({ msg, type });
-    setTimeout(() => setToast(null), 3000);
-  };
 
   const openAdd = () => {
     setForm(emptyForm);
@@ -95,10 +89,10 @@ export default function Schedules() {
         },
       });
       setRefresh((pre) => !pre);
-      showToast("Schedule created");
+      toast.success("Schedule created");
       setShowModal(false);
     } catch (e) {
-      console.log(e);
+      toast.error(e.response.data.message)
     }
   };
 
@@ -115,11 +109,11 @@ export default function Schedules() {
         },
       });
       if (res.data.result) {
-        showToast("Schedule removed", "error");
+        toast.success("Schedule deleted successful");
         setRefresh((pre) => !pre);
       }
     } catch (e) {
-      console.log(e);
+      toast.error(e.response.data.message);
     }
   };
 

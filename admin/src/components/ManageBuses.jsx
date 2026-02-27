@@ -12,6 +12,7 @@ import { fontSyne, fontDM } from "../assets/shared";
 import API from "../apis/apis";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import toast from 'react-hot-toast'
 
 const statusBadge = (status) => {
   const map = {
@@ -39,13 +40,13 @@ export default function ManageBuses() {
   const [showModal, setShowModal] = useState(false);
   const [form, setForm] = useState(emptyForm);
   const [editId, setEditId] = useState(null);
-  const [toast, setToast] = useState(null);
   const [originalBusData, setOriginalBusData] = useState(null);
 
   const fetchUser = async () => {
     const token = localStorage.getItem("userToken");
     if (!token) {
       navigate("/");
+      localStorage.removeItem("userToken");
       return;
     }
     try {
@@ -58,8 +59,7 @@ export default function ManageBuses() {
         localStorage.removeItem("userToken");
         navigate("/");
       }
-    } catch (err) {
-      console.error(err);
+    } catch (e) {
       localStorage.removeItem("userToken");
       navigate("/");
     }
@@ -73,11 +73,6 @@ export default function ManageBuses() {
       console.log(e);
     }
   }
-
-  const showToast = (msg, type = "success") => {
-    setToast({ msg, type });
-    setTimeout(() => setToast(null), 3000);
-  };
 
   const openAdd = () => {
     setForm(emptyForm);
@@ -98,7 +93,7 @@ export default function ManageBuses() {
       // if(token)
       if (editId && originalBusData) {
         if (!editId) {
-          showToast("Bus number is required");
+          toast.error("Someting went wrong")
           return;
         }
         const dataToSend = {};
@@ -109,7 +104,7 @@ export default function ManageBuses() {
         });
 
         if (Object.keys(dataToSend).length === 0) {
-          showToast("No changes made");
+          toast.success("No changes made");
           return;
         }
         dataToSend.busNumber = editId;
@@ -118,7 +113,7 @@ export default function ManageBuses() {
             Authorization: `Bearer ${token}`,
           },
         });
-        showToast("Bus updated successfully");
+        toast.success("Bus updated successfully");
       } else {
         if (
           !form.busNumber ||
@@ -130,7 +125,7 @@ export default function ManageBuses() {
           !form.price ||
           !form.isAvailable
         ) {
-          showToast("All field required");
+          toast.error("All field required");
           return;
         }
         await axios.post(API.admin.addBus, form, {
@@ -138,12 +133,12 @@ export default function ManageBuses() {
             Authorization: `Bearer ${token}`,
           },
         });
-        showToast("Bus added successfully");
+        toast.success("Bus added successfully");
       }
       setShowModal(false);
       setRefresh((pre) => !pre);
     } catch (e) {
-      console.log(e);
+      toast.error(e.response.data.message)
     }
   };
 
@@ -159,10 +154,11 @@ export default function ManageBuses() {
         },
       });
       if (res.data.result) {
+        toast.success(res.data.message)
         setRefresh((pre) => !pre);
       }
     } catch (e) {
-      console.log(e);
+      toast.error(e.response.data.message)
     }
   };
 
@@ -173,20 +169,6 @@ export default function ManageBuses() {
 
   return (
     <div style={fontDM}>
-      {/* toast */}
-      {toast && (
-        <div
-          className={`fixed top-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium shadow-lg border
-          ${toast.type === "error" ? "bg-red-900/80 text-red-300 border-red-500/40" : "bg-emerald-900/80 text-emerald-300 border-emerald-500/40"}`}
-        >
-          {toast.type === "error" ? (
-            <AlertCircle size={15} />
-          ) : (
-            <CheckCircle size={15} />
-          )}
-          {toast.msg}
-        </div>
-      )}
 
       <div className="flex items-center justify-between mb-8">
         <div>

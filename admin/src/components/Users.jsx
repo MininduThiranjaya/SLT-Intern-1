@@ -14,6 +14,7 @@ export default function Users() {
     const token = localStorage.getItem("userToken");
     if (!token) {
       navigate("/");
+      localStorage.removeItem("userToken");
       return;
     }
     try {
@@ -27,7 +28,6 @@ export default function Users() {
         navigate("/");
       }
     } catch (err) {
-      console.error(err);
       localStorage.removeItem("userToken");
       navigate("/");
     }
@@ -57,7 +57,6 @@ export default function Users() {
       });
       setUsers(res.data.result);
     } catch (e) {
-      console.log(e);
     }
   }
 

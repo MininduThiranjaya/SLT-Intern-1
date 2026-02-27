@@ -12,6 +12,7 @@ import { fontSyne, fontDM } from "../assets/shared";
 import { useNavigate } from "react-router-dom";
 import API from "../apis/apis";
 import axios from "axios";
+import toast from 'react-hot-toast'
 
 export default function LoginPage() {
   const navigate = useNavigate();
@@ -38,12 +39,13 @@ export default function LoginPage() {
       });
       console.log(res);
       if (res.data.result.userRole.includes("admin")) {
+        toast.success(res.data.message)
         localStorage.setItem("userToken", res.data.result.token);
         navigate("/dashboard");
       }
       setStatus("idle");
     } catch (e) {
-      console.log(e);
+      toast.error(e.response.data.message)
       setStatus("idle");
     }
   };

@@ -75,6 +75,7 @@ export default function Overview() {
       const token = localStorage.getItem("userToken");
       if (!token) {
         navigate("/");
+        localStorage.removeItem("userToken");
         return;
       }
       try {
@@ -87,8 +88,7 @@ export default function Overview() {
           localStorage.removeItem("userToken");
           navigate("/");
         }
-      } catch (err) {
-        console.error(err);
+      } catch (e) {
         localStorage.removeItem("userToken");
         navigate("/");
       }
@@ -107,10 +107,7 @@ export default function Overview() {
           },
         });
         setDashboard(res.data.result);
-      } catch (err) {
-        console.error(err);
-        localStorage.removeItem("userToken");
-        navigate("/");
+      } catch (e) {
       }
     };
     fetchUser();
