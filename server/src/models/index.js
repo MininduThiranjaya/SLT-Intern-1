@@ -54,7 +54,7 @@ async function initializeDefaults() {
 }
 
 async function syncModels() {
-    await seqConnection.sync({ alter: true })
+    await seqConnection.sync()
     await initializeDefaults()
     console.log("All models synced with DB...")
 }
@@ -64,6 +64,8 @@ syncModels()
 module.exports = {
     User,
     Role,
+    Bus,
+    BusSchedule,
     ForgetPassword,
     Booking,
     BookingSeat
