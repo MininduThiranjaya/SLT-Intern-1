@@ -83,7 +83,6 @@ async function busSeatBooking(req) {
     try {
         const {busNumber, scheduleId, seats} = req.body
         const {email} = req.user
-        console.log(email, busNumber, scheduleId, seats)
         if(!scheduleId || !seats || !email || !busNumber) return { statusCode: 401, status: false, message: "All fields are required", data: null }
         const t = await seqConnection.transaction();
         const tempUser = await User.findOne({
