@@ -197,7 +197,7 @@ async function getStats() {
             Booking.count(),
             Booking.count({ where: { status: "CONFIRMED" } }),
             Booking.count({ where: { status: "PENDING" } }),
-            Booking.count({ where: { status: "REJECTED" } }),
+            Booking.count({ where: { status: "CANCELLED" } }),
             BusSchedule.count({
                 where: {
                     scheduleDate : {
