@@ -10,5 +10,3 @@ const User = seqConnection.define('User', {
 }, {timestamps: true})
 
 module.exports = User
-
-// the user cannot be the both client and conductor if he use same email
