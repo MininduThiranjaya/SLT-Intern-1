@@ -1,43 +1,41 @@
 import { useState } from "react";
 import { Bus, Mail, Lock, Eye, EyeOff, AlertCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { S, fontSyne } from "../assets/shared";
+import { fontSyne } from "../assets/shared";
 import axios from "axios";
-import API from "../apis/apis"
+import API from "../apis/apis";
 
 export default function LoginPage() {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [email, setEmail] = useState("pas1@gmail.com");
   const [password, setPassword] = useState("Abcd@1234");
   const [showPw, setShowPw] = useState(false);
-  const [status, setStatus] = useState("idle"); // idle | loading
+  const [status, setStatus] = useState("idle");
   const [error, setError] = useState("");
 
   const handleSubmit = async (e) => {
-    try{
-
+    try {
       e.preventDefault();
       setError("");
-      
-      if(!email && !password) {
-        setError('All fields are required')
-        return
+
+      if (!email && !password) {
+        setError("All fields are required");
+        return;
       }
-      
+
       setStatus("loading");
       const res = await axios.post(API.common.login, {
         email: email,
-        password: password
-      })
-      console.log(res)
-      if(res.data.result.userRole.includes('passenger')) {
-        localStorage.setItem('userToken', res.data.result.token)
-        navigate('/dashboard')
+        password: password,
+      });
+      console.log(res);
+      if (res.data.result.userRole.includes("passenger")) {
+        localStorage.setItem("userToken", res.data.result.token);
+        navigate("/dashboard");
       }
-      setStatus('idle')
-    }
-    catch(e) {
-      console.log(e)
+      setStatus("idle");
+    } catch (e) {
+      console.log(e);
       setStatus("idle");
     }
   };
@@ -47,7 +45,6 @@ export default function LoginPage() {
       className="relative min-h-screen flex items-center justify-center overflow-hidden bg-[#161826] px-4"
       style={{ fontFamily: "'DM Sans', 'Helvetica Neue', sans-serif" }}
     >
-      {/* Ambient glow */}
       <div
         className="pointer-events-none absolute top-1/2 left-1/2 
                   -translate-x-1/2 -translate-y-1/2 
@@ -56,13 +53,11 @@ export default function LoginPage() {
       />
 
       <div className="relative z-10 w-full max-w-[460px]">
-        {/* CARD */}
         <div
           className="bg-[#1c1f2e] border border-[#2a2d3e] 
                     backdrop-blur-xl rounded-3xl 
                     shadow-2xl p-10"
         >
-          {/* Brand */}
           <div className="flex items-center gap-3 mb-9">
             <div
               className="w-12 h-12 bg-yellow-400 rounded-2xl 
@@ -75,7 +70,7 @@ export default function LoginPage() {
               <div
                 className="font-extrabold text-[1.3rem] 
                           text-yellow-500 tracking-tight"
-                          style={fontSyne}
+                style={fontSyne}
               >
                 RideBook
               </div>
@@ -87,23 +82,24 @@ export default function LoginPage() {
               </div>
             </div>
           </div>
-          {/* Heading */}
-          <h1 className="font-bold text-3xl text-yellow-400 mb-1.5" style={fontSyne}>
+          <h1
+            className="font-bold text-3xl text-yellow-400 mb-1.5"
+            style={fontSyne}
+          >
             Welcome back
           </h1>
           <p className="text-sm text-[#7a7e96] mb-8">
             Sign in to continue booking your journey.
           </p>
-          {/* Error Banner */}{" "}
+          {/* error Banner */}{" "}
           {error && (
             <div className="flex items-center gap-2 bg-red-50 border border-red-200 text-red-600 text-xs px-4 py-3 rounded-xl mb-5">
               {" "}
               <AlertCircle size={14} className="flex-shrink-0" /> {error}{" "}
             </div>
           )}
-          {/* FORM */}
+          {/* form */}
           <form onSubmit={handleSubmit}>
-            {/* Email */}
             <div className="mb-5">
               <label className="block text-sm font-medium text-[#9a9eb8] mb-2">
                 Email Address
@@ -128,8 +124,6 @@ export default function LoginPage() {
                 />
               </div>
             </div>
-
-            {/* Password */}
             <div className="mb-5">
               <label className="block text-sm font-medium text-[#9a9eb8] mb-2">
                 Password
@@ -163,7 +157,6 @@ export default function LoginPage() {
               </div>
             </div>
 
-            {/* Forgot Password */}
             <div className="flex justify-center mt-2 mb-6">
               <a
                 href="/forget-password"
@@ -173,7 +166,6 @@ export default function LoginPage() {
               </a>
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               disabled={status === "loading"}
@@ -198,7 +190,6 @@ export default function LoginPage() {
               )}
             </button>
           </form>
-          {/* Divider */}
           <div className="flex items-center gap-3 my-7">
             <div className="flex-1 h-px bg-[#2a2d3e]" />
             <span className="text-xs text-[#7a7e96] uppercase tracking-widest">
@@ -206,7 +197,6 @@ export default function LoginPage() {
             </span>
             <div className="flex-1 h-px bg-[#2a2d3e]" />
           </div>
-          {/* Register */}
           <p className="text-center text-sm text-[#7a7e96]">
             Don't have an account?{" "}
             <a
