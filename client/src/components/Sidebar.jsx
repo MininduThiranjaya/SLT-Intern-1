@@ -1,15 +1,15 @@
 import { Bus, Home, Ticket, User, LogOut, X } from "lucide-react";
-import {useNavigate} from 'react-router-dom'
+import { useNavigate } from "react-router-dom";
 
 const tabs = [
-  { id: "booking", label: "Book",    icon: <Home size={18} /> },
+  { id: "booking", label: "Book", icon: <Home size={18} /> },
   { id: "tickets", label: "Tickets", icon: <Ticket size={18} /> },
   { id: "profile", label: "Profile", icon: <User size={18} /> },
 ];
 
 // sidebar
 export function Sidebar({ activeTab, setActiveTab, currentUser }) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const onLogout = () => {
     localStorage.removeItem("userToken");
@@ -68,7 +68,10 @@ export function Sidebar({ activeTab, setActiveTab, currentUser }) {
           onClick={onLogout}
           className="flex items-center gap-3 w-full px-4 py-3 rounded-2xl text-[0.88rem] font-semibold text-[#7a7e96] hover:bg-red-500/10 hover:text-red-400 transition-all group"
         >
-          <LogOut size={17} className="group-hover:translate-x-0.5 transition-transform" />
+          <LogOut
+            size={17}
+            className="group-hover:translate-x-0.5 transition-transform"
+          />
           Sign Out
         </button>
       </div>
@@ -76,7 +79,7 @@ export function Sidebar({ activeTab, setActiveTab, currentUser }) {
   );
 }
 
-// Mobile Header
+// mobile header
 export function MobileHeader({ mobileMenuOpen, setMobileMenuOpen }) {
   return (
     <header className="md:hidden fixed top-0 left-0 right-0 z-40 bg-[#0d0f1a] border-b border-white/[0.06] px-4 py-3 flex items-center justify-between">
@@ -84,7 +87,9 @@ export function MobileHeader({ mobileMenuOpen, setMobileMenuOpen }) {
         <div className="w-8 h-8 bg-yellow-400 rounded-xl flex items-center justify-center">
           <Bus size={16} className="text-[#0d0f1a]" />
         </div>
-        <span className="font-extrabold text-yellow-400 text-base">RideBook</span>
+        <span className="font-extrabold text-yellow-400 text-base">
+          RideBook
+        </span>
       </div>
       <button
         onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -104,9 +109,9 @@ export function MobileHeader({ mobileMenuOpen, setMobileMenuOpen }) {
   );
 }
 
-// Mobile Menu Drawer 
+// mobile menu drawer
 export function MobileMenu({ activeTab, setActiveTab, currentUser }) {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const onLogout = () => {
     localStorage.removeItem("userToken");
@@ -114,22 +119,26 @@ export function MobileMenu({ activeTab, setActiveTab, currentUser }) {
   };
   return (
     <div className="md:hidden fixed inset-0 z-30 bg-[#0d0f1a] pt-16 px-5 pb-8 flex flex-col">
-      {/* User info */}
+
       <div className="flex items-center gap-3 bg-white/[0.04] rounded-2xl p-4 mb-6">
         <div className="w-10 h-10 bg-yellow-400 rounded-xl flex items-center justify-center font-bold text-[#0d0f1a]">
           {currentUser?.userName}
         </div>
         <div>
-          <div className="text-white font-semibold text-sm">{currentUser?.userName}</div>
+          <div className="text-white font-semibold text-sm">
+            {currentUser?.userName}
+          </div>
           <div className="text-[#7a7e96] text-xs">{currentUser?.email}</div>
         </div>
       </div>
 
-      {/* Nav */}
+      {/* navigation */}
       {tabs.map((tab) => (
         <button
           key={tab.id}
-          onClick={() => { setActiveTab(tab.id) }}
+          onClick={() => {
+            setActiveTab(tab.id);
+          }}
           className={`flex items-center gap-3 px-4 py-3.5 rounded-2xl text-base font-semibold mb-1 transition-all ${
             activeTab === tab.id
               ? "bg-yellow-400 text-[#0d0f1a]"
@@ -141,7 +150,6 @@ export function MobileMenu({ activeTab, setActiveTab, currentUser }) {
         </button>
       ))}
 
-      {/* Logout */}
       <div className="mt-auto border-t border-white/[0.06] pt-4">
         <button
           onClick={onLogout}
