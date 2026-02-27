@@ -15,12 +15,14 @@ const API = {
     },
     admin: {
         addBus: `${commonUrl}admin/add-bus`,
+        updateBus: `${commonUrl}admin/update-bus`,
         deleteBus: `${commonUrl}admin/delete-bus`,
         addSchedule: `${commonUrl}admin/create-new-schedule`,
         deleteSchedule: `${commonUrl}admin/delete-schedule`,
         getUsers: `${commonUrl}admin/get-users`,
         getAllBookings: `${commonUrl}admin/get-all-bookings`,
-        updateBookingStatus: `${commonUrl}admin/update-booking-status`
+        updateBookingStatus: `${commonUrl}admin/update-booking-status`,
+        getStats: `${commonUrl}admin/stats`
     }
 }
 
