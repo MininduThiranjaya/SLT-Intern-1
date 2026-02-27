@@ -19,7 +19,7 @@ const ProtectedRoute = ({children}) => {
         localStorage.removeItem("token");
         return <Navigate to="/" replace />;
     }
-    return children //renfer child route
+    return children
 }
 
 export default ProtectedRoute
