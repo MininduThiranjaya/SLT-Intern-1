@@ -1,4 +1,4 @@
-const {Bus,BusSchedule} = require('../models/index')
+const {Bus,BusSchedule, User, Role, Booking, BookingSeat} = require('../models/index')
 
 async function createSchedule(req) {
     try{
@@ -70,7 +70,7 @@ async function deleteBus(req) {
 async function deleteSchedule(req) {
     try {
         const { id } = req.body;
-        if (!id) return { statusCode: 401, status: false, message: "All fields are required", data: null }
+        if(!id) return { statusCode: 401, status: false, message: "All fields are required", data: null }
         const isDeleted = await BusSchedule.destroy({
             where: {
                 id: id
@@ -84,4 +84,74 @@ async function deleteSchedule(req) {
     }
 }
 
-module.exports = {createSchedule, addBus, deleteBus, deleteSchedule}
+async function getUsers() {
+    try {
+        const tempUsers = await User.findAll({
+            attributes: {
+                exclude: ['id', 'password', 'updatedAt']   // exclude sensitive fields
+            },
+            include: {
+                model: Role,
+                where: {
+                    name: 'passenger'
+                }
+            }
+        });
+        if(tempUsers.length == 0) return {statusCode: 200, status: true, message: "No user found", data:null }
+        return {statusCode: 200, status: true, message: "Fetach all users", data: tempUsers }
+    } catch (error) {
+        console.log(e)
+        return {statusCode: 500, status: false, message: "Internal server error", data: null};
+    }
+}
+
+async function getAllBookings() {
+    try {
+        const tempAllBookings = await Booking.findAll({
+            include: [
+                {
+                    model: User,
+                    attributes: ['id', 'userName', 'email', 'phoneNumber'] 
+                },
+                {
+                    model:BusSchedule,
+                    include: [
+                        {
+                            model:Bus,
+                            attributes: ["busNumber", "from", "to", "departure", "arrival", 'price']
+                        }
+                    ]
+                },
+                {
+                    model: BookingSeat,
+                    attributes: ['seatNumber']
+                }
+            ],
+            order: [['createdAt', 'DESC']]
+        })
+        if(tempAllBookings.length == 0) return {statusCode: 200, status: true, message: "No user booking found", data:null }
+        return {statusCode: 200, status: true, message: "Fetach all user bookings", data: tempAllBookings }
+    } catch (error) {
+        console.log(e)
+        return {statusCode: 500, status: false, message: "Internal server error", data: null};
+    }
+}
+
+async function updateBookingStatus(res) {
+    try {
+        const {bookingId, status} = res.body
+        if(!bookingId || !status) return { statusCode: 401, status: false, message: "All fields are required", data: null }
+        const allowedStatus = ["PENDING", "CONFIRMED", "CANCELLED"];   
+        if (!allowedStatus.includes(status)) return {statusCode: 401, status: false, message: "Invalid booking status", data: null}
+        const booking = await Booking.findByPk(bookingId);
+        if(!booking) return { statusCode: 404, status: false, message: "No booking found", data: null }
+        booking.status = status;
+        await booking.save();
+        return {statusCode: 200, status: true, message: "Booking status updated", data: null }
+    } catch (error) {
+        console.log(e)
+        return {statusCode: 500, status: false, message: "Internal server error", data: null};
+    }
+}
+
+module.exports = {createSchedule, addBus, deleteBus, deleteSchedule, getUsers, getAllBookings, updateBookingStatus}
