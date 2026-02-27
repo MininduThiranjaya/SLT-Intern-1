@@ -10,7 +10,8 @@ const API = {
     },
     user: {
         search: `${commonUrl}user/search-schedule`,
-        seatBooking: `${commonUrl}user/bus-seat-booking`
+        seatBooking: `${commonUrl}user/bus-seat-booking`,
+        deleteUser: `${commonUrl}user/delete-my-account`
     }
 }
 
