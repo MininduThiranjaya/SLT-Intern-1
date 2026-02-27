@@ -1,6 +1,6 @@
 const express = require('express')
 const router = express.Router()
-const {createSchedule, addBus, deleteBus, deleteSchedule, getUsers, getAllBookings, updateBookingStatus} = require('../services/adminServices')
+const {createSchedule, addBus, deleteBus, deleteSchedule, getUsers, getAllBookings, updateBookingStatus, updateBus, getStats} = require('../services/adminServices')
 const {verifyToken} = require("../auth/auth")
 
 router.post('/add-bus', verifyToken, async (req, res) => {
@@ -35,6 +35,16 @@ router.get('/get-all-bookings', verifyToken, async (req, res) => {
 
 router.put('/update-booking-status', verifyToken, async (req, res) => {
         const result = await updateBookingStatus(req)
+        return res.status(result.statusCode).json({status: result.status, message: result.message ?? null, result: result.data ?? null})
+})
+
+router.put('/update-bus', verifyToken, async (req, res) => {
+        const result = await updateBus(req)
+        return res.status(result.statusCode).json({status: result.status, message: result.message ?? null, result: result.data ?? null})
+})
+
+router.get('/stats', verifyToken, async (req, res) => {
+        const result = await getStats()
         return res.status(result.statusCode).json({status: result.status, message: result.message ?? null, result: result.data ?? null})
 })
 
