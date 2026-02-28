@@ -8,6 +8,8 @@ const PORT = process.env.PORT;
 const commonRoutes = require("./src/routes/commonRoutes");
 const userRoutes = require("./src/routes/userRoutes");
 const adminRoutes = require("./src/routes/adminRoutes");
+const stripRoutes = require('./src/routes/stripeRoutes')
+
 
 app.use(
   cors({
@@ -17,6 +19,10 @@ app.use(
     credentials: true,
   }),
 );
+
+// stripe routes - webhook payload must be provided as raw string or Buffer
+app.use("/api/stripe", userRoutes);
+
 app.use(express.json());
 
 // // routes apply
