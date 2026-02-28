@@ -2,7 +2,6 @@ const express = require('express')
 const router = express.Router()
 const {userLogin, userRegistration, forgetPassword, forgetPasswordReset, verifyUser, getBuses, getSchedule} = require('../services/commonService')
 const {verifyToken} = require("../auth/auth")
-const { BusSchedule } = require('../models')
 
 router.post('/login', async (req, res) => {
         const result = await userLogin(req)

@@ -6,6 +6,7 @@ const Booking = seqConnection.define("Booking", {
     userId: { type: DataTypes.INTEGER, allowNull: false, onDelete: "CASCADE" },
     scheduleId: { type: DataTypes.INTEGER, allowNull: false, onDelete: "CASCADE" },
     totalPrice: { type: DataTypes.DECIMAL(10,2), allowNull: false},
+    stripePaymentId: { type: DataTypes.STRING, allowNull: true, defaultValue: null},
     status: { type: DataTypes.ENUM("PENDING","CONFIRMED","CANCELLED"), defaultValue: "PENDING"}
 }, { timestamps: true });
 

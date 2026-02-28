@@ -1,5 +1,8 @@
 const {Bus, BusSchedule, User, BookingSeat, Booking} = require('../models/index')
+require('dotenv')
 const seqConnection = require('../db/dbConnection')
+const Stripe = require('stripe')
+const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 // search schedule
 async function searchSchedule(req) {
@@ -123,7 +126,7 @@ async function busSeatBooking(req) {
         }));
         await BookingSeat.bulkCreate(bookingSeatsData, { transaction: t });
         await t.commit();
-        return {statusCode: 200, status: true, message: "Booking created successfully", data: {bookingId: booking.id, seats, totalPrice}}
+        return {statusCode: 200, status: true, message: "Booking created successfully", data: {bookingId: booking.id, seats, totalPrice, busNumber}}
     }
     catch(e) {
         console.log(e)
@@ -188,4 +191,64 @@ async function getMyBookings(req) {
     }
 }
 
-module.exports = {searchSchedule, busSeatBooking, deleteMyAccount, getMyBookings}
+// create checkout session
+async function createPayment(req) {
+    try {
+        const { bookingId, totalPrice, seats, busNumber } = req.body;
+
+        const session = await stripe.checkout.sessions.create({
+        payment_method_types: ["card"],
+        mode: "payment",
+        line_items: [{
+            price_data: {
+            currency: "lkr",
+            product_data: { name: `Bus ${busNumber} Seat Booking` },
+            unit_amount: totalPrice * 100,
+            },
+            quantity: 1
+        }],
+        metadata: {
+            bookingId,
+            seats: JSON.stringify(seats)
+        },
+            success_url: `http://localhost:5174/success`,
+            cancel_url: `http://localhost:5174/success`,
+        });
+        return {statusCode: 200, status: true, message: "No user booking found", data:{url: session.url} }
+    } catch (err) {
+        console.log(err);
+        res.status(500).json({ status: false, message: "Failed to create checkout session" });
+    }
+}
+
+// create stripe webhook
+async function webhookConnection(req) {
+    try {
+        const sig = req.headers["stripe-signature"];
+        let event;
+        event = stripe.webhooks.constructEvent(
+            req.body,
+            sig,
+            process.env.STRIPE_WEBHOOK_SECRET
+        );
+        if (event.type === "checkout.session.completed") {
+            const session = event.data.object;
+            const bookingId = session.metadata.bookingId;
+            const [updatedRows] = await Booking.update(
+                { status: "CONFIRMED", stripePaymentId: session.payment_intent},
+                { where: { id: bookingId, status: "PENDING" } }
+            );
+            if (updatedRows > 0) {
+                console.log(`Booking ${bookingId} confirmed`);
+            } else {
+                console.log(`Booking ${bookingId} already confirmed or not found`);
+            }
+        }
+        return {statusCode: 200, status: true, message: "Webhook success", data:{received: true}}
+    } catch (e) {
+        console.log(e);
+        return {statusCode:500, status: false, message: "Webhook failed", data:{received: false}};
+    }
+}
+
+module.exports = {searchSchedule, busSeatBooking, deleteMyAccount, getMyBookings, createPayment, webhookConnection}
