@@ -33,7 +33,7 @@ export default function Users() {
     }
   };
 
-  const filtered = users.filter((u) => {
+  const filtered = users?.filter((u) => {
     const matchFilter = "all";
     const matchSearch =
       u.userName.toLowerCase().includes(search.toLowerCase()) ||
@@ -55,7 +55,7 @@ export default function Users() {
           Authorization: `Bearer ${token}`,
         },
       });
-      setUsers(res.data.result);
+      setUsers(res.data.result || []);
     } catch (e) {
     }
   }
@@ -72,7 +72,7 @@ export default function Users() {
           Users
         </h1>
         <p className="text-[#7a7e96] text-sm">
-          {users.length > 0 ? users.length : 0} registered passengers
+          {users?.length > 0 ? users.length : 0} registered passengers
         </p>
       </div>
 
@@ -81,7 +81,7 @@ export default function Users() {
         <div className="flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium border transition-all capitalize bg-[#1c1f2e] text-[#9a9eb8] border-[#2a2d3e] hover:border-[#3a3d4e] hover:text-white">
           All{" "}
           <span className={`text-xs px-1.5 py-0.5 rounded-md "bg-[#2a2d3e]"}`}>
-            {users.length > 0 ? users.length : 0}
+            {users?.length > 0 ? users.length : 0}
           </span>
         </div>
 
@@ -119,7 +119,7 @@ export default function Users() {
               </tr>
             </thead>
             <tbody>
-              {filtered.map((u) => (
+              {filtered?.map((u) => (
                 <tr
                   key={u.email}
                   className="border-b border-[#2a2d3e]/50 hover:bg-[#252840] transition-colors"
@@ -162,7 +162,7 @@ export default function Users() {
               ))}
             </tbody>
           </table>
-          {filtered.length === 0 && (
+          {filtered?.length == 0 && (
             <div className="text-center py-12 text-[#7a7e96]">
               No users found
             </div>

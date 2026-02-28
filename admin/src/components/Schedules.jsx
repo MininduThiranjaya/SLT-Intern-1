@@ -53,7 +53,7 @@ export default function Schedules() {
     try {
       const busRes = await axios.get(API.common.getBuses);
       const scheduleRes = await axios.get(API.common.getSchedule);
-      const schedules = scheduleRes.data.result.flatMap((bus) =>
+      const schedules = scheduleRes.data.result?.flatMap((bus) =>
         bus.BusSchedules.map((schedule) => ({
           id: schedule.id,
           busNumber: bus.busNumber,
@@ -124,19 +124,6 @@ export default function Schedules() {
 
   return (
     <div style={fontDM}>
-      {toast && (
-        <div
-          className={`fixed top-6 right-6 z-50 flex items-center gap-2 px-4 py-3 rounded-xl text-sm font-medium shadow-lg border
-          ${toast.type === "error" ? "bg-red-900/80 text-red-300 border-red-500/40" : "bg-emerald-900/80 text-emerald-300 border-emerald-500/40"}`}
-        >
-          {toast.type === "error" ? (
-            <AlertCircle size={15} />
-          ) : (
-            <CheckCircle size={15} />
-          )}
-          {toast.msg}
-        </div>
-      )}
 
       <div className="flex items-center justify-between mb-8">
         <div>
@@ -144,7 +131,7 @@ export default function Schedules() {
             Schedules
           </h1>
           <p className="text-[#7a7e96] text-sm">
-            {schedules.length > 0 ? schedules.length : 0} schedules total
+            {schedules?.length > 0 ? schedules?.length : 0} schedules total
           </p>
         </div>
         <button
@@ -181,7 +168,7 @@ export default function Schedules() {
               </tr>
             </thead>
             <tbody>
-              {schedules.map((s) => (
+              {schedules?.map((s) => (
                 <tr
                   key={s.id}
                   className="border-b border-[#2a2d3e]/50 hover:bg-[#252840] transition-colors"
@@ -257,7 +244,7 @@ export default function Schedules() {
                   Bus
                 </label>
                 <select
-                  value={selectedBus?.busNumber ? selectedBus.busNumber : ""}
+                  value={form.busNumber || ""}
                   onChange={(e) => {
                     const selection = e.target.value;
                     setForm({ ...form, busNumber: selection });
@@ -271,7 +258,8 @@ export default function Schedules() {
                   <option value="" className="bg-[#1c1f2e]">
                     Select a Bus
                   </option>
-                  {buses.map((b) => (
+                  {console.log(buses)}
+                  {buses?.map((b) => (
                     <option
                       key={b.busNumber}
                       value={b.busNumber}

@@ -62,7 +62,7 @@ export default function Bookings() {
           Authorization: `Bearer ${token}`,
         },
       });
-      const bookings = res.data.result.map((b) => ({
+      const bookings = res.data.result?.map((b) => ({
         bookingId: b.id,
         status: b.status,
         totalPrice: b.totalPrice,
@@ -83,9 +83,9 @@ export default function Bookings() {
         arrival: b.BusSchedule?.Bus?.arrival,
         price: b.BusSchedule?.Bus?.price,
 
-        seats: b.BookingSeats?.map((s) => s.seatNumber) || [],
+        seats: b?.BookingSeats?.map((s) => s.seatNumber) || [],
       }));
-      setBookings(bookings);
+      setBookings(bookings || []);
     } catch (e) {
       console.log(e);
     }
@@ -116,7 +116,7 @@ export default function Bookings() {
     }
   };
 
-  const filtered = bookings.filter((b) => {
+  const filtered = bookings?.filter((b) => {
     const matchFilter = filter === "all" || b.status === filter;
     const matchSearch =
       b.email.toLowerCase().includes(search.toLowerCase()) ||
@@ -126,10 +126,10 @@ export default function Bookings() {
   });
 
   const counts = {
-    all: bookings.length,
-    PENDING: bookings.filter((b) => b.status === "PENDING").length,
-    CONFIRMED: bookings.filter((b) => b.status === "CONFIRMED").length,
-    CANCELLED: bookings.filter((b) => b.status === "CANCELLED").length,
+    all: bookings?.length || 0,
+    PENDING: bookings?.filter((b) => b.status === "PENDING").length || 0,
+    CONFIRMED: bookings?.filter((b) => b.status === "CONFIRMED").length || 0,
+    CANCELLED: bookings?.filter((b) => b.status === "CANCELLED").length || 0,
   };
 
   useEffect(() => {
@@ -143,7 +143,7 @@ export default function Bookings() {
           Bookings
         </h1>
         <p className="text-[#7a7e96] text-sm">
-          {bookings.length} total bookings
+          {bookings?.length || 0} total bookings
         </p>
       </div>
 
@@ -188,12 +188,12 @@ export default function Bookings() {
 
       {/* bookings  */}
       <div className="space-y-3">
-        {filtered.length === 0 && (
+        {filtered?.length === 0 && (
           <div className="bg-[#1c1f2e] border border-[#2a2d3e] rounded-2xl p-12 text-center text-[#7a7e96]">
             No bookings found
           </div>
         )}
-        {filtered.map((b) => {
+        {filtered?.map((b) => {
           const statusConfiguration = statusConfig[b.status];
           const StatusIcon = statusConfiguration.icon;
           return (
