@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 const PaymentSuccess = () => {
+  const navigate = useNavigate()
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-lg p-10 max-w-md w-full text-center">
@@ -44,7 +47,10 @@ const PaymentSuccess = () => {
         </div>
 
         {/* Buttons */}
-        <button className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-xl transition-colors duration-200 mb-3">
+        <button
+          onClick={() => navigate('/dashboard')}
+          className="w-full bg-green-500 hover:bg-green-600 text-white font-semibold py-3 rounded-xl transition-colors duration-200 mb-3"
+        >
           Go to Dashboard
         </button>
       </div>
