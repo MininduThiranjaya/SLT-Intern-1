@@ -4,9 +4,7 @@ import {
   MapPin,
   Clock,
   ArrowLeftRight,
-  Star,
   Bus,
-  ChevronRight,
   CheckCircle,
   User,
   Phone,
@@ -31,7 +29,6 @@ export default function BookingPage({ currentUser }) {
   const [passengerPhone, setPassengerPhone] = useState(
     currentUser?.phoneNumber ?? "",
   );
-  const [seatPref, setSeatPref] = useState("Window");
   const [bookingId, setBookingId] = useState("");
 
   // seat layout modal
@@ -130,13 +127,21 @@ export default function BookingPage({ currentUser }) {
           },
         },
       );
-      if(res.data.status) {
-        toast.success(res.data.message)
-        setBookingId("BK-" + (Math.floor(Math.random() * 90000) + 10000));
-        setStep(3);
+      if (res.data.status) {
+        const res2 = await axios.post(API.user.createPayment, res.data.result, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (res2.data.status) {
+          console.log(res2);
+          window.location.href = res2.data.result.url;
+          setBookingId("BK-" + (Math.floor(Math.random() * 90000) + 10000));
+          setStep(3);
+        }
       }
     } catch (e) {
-      toast.error(e.response.data.message)
+      console.log(e);
       setStep(2);
     }
   };
