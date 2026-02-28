@@ -1,4 +1,4 @@
-const commonUrl = 'https://slt-intern-1.onrender.com'
+const commonUrl = 'https://slt-intern-1.onrender.com/'
 
 const API = {
     common: {
