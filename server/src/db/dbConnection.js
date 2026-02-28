@@ -1,17 +1,14 @@
-const { Sequelize } = require('sequelize');
+const { Sequelize } = require("sequelize");
 require("dotenv").config();
 
-const seqConnection = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
-  {
-    host: process.env.DB_HOST,
-    port: process.env.DB_PORT,
-    dialect: "mysql",
-    logging: false
-  }
-);
+const seqConnection = new Sequelize(process.env.DATABASE_URL, {
+  dialect: "mysql",
+  dialectOptions: {
+    ssl: {
+      rejectUnauthorized: false, 
+    },
+  },
+});
 
 async function makeConnection() {
   await seqConnection
