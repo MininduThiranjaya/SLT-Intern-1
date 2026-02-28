@@ -1,10 +1,36 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
+import { Toaster } from "react-hot-toast";
 import './index.css'
-import App from './App.jsx'
+
+// auth
+import ProtectedRoute from './auth/ProtectedRoute';
+
+// pages
+import LoginPage from './page/LoginPage';
+import DashboardPage from './page/DashboardPage';
+import RegistrationPage from './page/RegistrationPage';
+import ForgetPasswordPage from './page/ForgetPasswordPage';
+import PaymentFail from './components/PaymentFail';
+import PaymentSuccess from './components/PaymentSuccess';
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <App />
-  </StrictMode>,
+    <Toaster position="top-right" reverseOrder={false} />
+    <Router>
+      <Routes>
+        <Route path='/' element={<LoginPage/>}/>
+        <Route path='/success' element={<PaymentSuccess/>}/>
+        <Route path='/cancel' element={<PaymentFail/>}/>
+        <Route path='/reg' element={<RegistrationPage/>}/>
+        <Route path='/forget-password' element={<ForgetPasswordPage/>}/>
+          <Route path='/dashboard' element={
+            <ProtectedRoute>
+              <DashboardPage />
+            </ProtectedRoute>
+          }/>
+      </Routes>
+    </Router>
+  </StrictMode>
 )
