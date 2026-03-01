@@ -184,6 +184,9 @@ async function getSchedule() {
                     {
                         model: Booking,
                         attributes: [],
+                        where: {
+                            status: ["PENDING","CONFIRMED"]
+                        },
                         required: false,
                         include: [
                             {
