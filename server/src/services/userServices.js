@@ -278,7 +278,7 @@ async function webhookConnection(req) {
 
 async function getSpecificBookingDetails(req) {
     try {
-        const {bookingId} = req.body
+        const {bookingId} = req.query
         if(!bookingId) return {statusCode: 401, status: false, message: "All fields are required", data: null}
         const tempAllBookings = await Booking.findAll({
             where:{
