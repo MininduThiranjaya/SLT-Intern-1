@@ -13,7 +13,7 @@ const PaymentFail = () => {
   useEffect(() => {
     const fetchBookingDetails = async (bookingId) => {
       try{
-        useState(true)
+        setLoading(true)
         const token = localStorage.getItem('userToken')
         const res = await axios.get(API.user.getSpecificBooking, {
           params: { bookingId },
@@ -27,6 +27,7 @@ const PaymentFail = () => {
             status: b.status,
             totalPrice: b.totalPrice,
             bookedAt: b.createdAt,
+            stripePaymentId: b.stripePaymentId,
 
             scheduleId: b.BusSchedule?.id,
             scheduleDate: b.BusSchedule?.scheduleDate,
@@ -40,7 +41,7 @@ const PaymentFail = () => {
 
             seats: b.BookingSeats?.map((s) => s.seatNumber) || [],
           }));
-          setTicketDetails(booking)
+          setTicketDetails(booking[0])
           setLoading(false)
         }
       }
@@ -101,7 +102,7 @@ const PaymentFail = () => {
             <span className="text-gray-700 font-medium">{ticketDetails?.bookedAt}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-400">Seats</span>
+            <span className="text-gray-400">Booked Seats Numbers</span>
             <span className="text-gray-700 font-medium">{ticketDetails?.seats?.join(", ")}</span>
           </div>
         </div>

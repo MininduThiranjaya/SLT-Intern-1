@@ -13,7 +13,7 @@ const PaymentSuccess = () => {
   useEffect(() => {
     const fetchBookingDetails = async (bookingId) => {
       try{
-        useState(true)
+        setLoading(true)
         const token = localStorage.getItem('userToken')
         const res = await axios.get(API.user.getSpecificBooking, {
           params: { bookingId },
@@ -27,6 +27,7 @@ const PaymentSuccess = () => {
             status: b.status,
             totalPrice: b.totalPrice,
             bookedAt: b.createdAt,
+            stripePaymentId: b.stripePaymentId,
 
             scheduleId: b.BusSchedule?.id,
             scheduleDate: b.BusSchedule?.scheduleDate,
@@ -40,7 +41,7 @@ const PaymentSuccess = () => {
 
             seats: b.BookingSeats?.map((s) => s.seatNumber) || [],
           }));
-          setTicketDetails(booking)
+          setTicketDetails(booking[0])
           setLoading(false)
         }
       }
@@ -60,6 +61,8 @@ const PaymentSuccess = () => {
           </div>
         )
       }
+
+      {console.log(ticketDetails)}
       <div className="bg-white rounded-2xl shadow-lg p-10 max-w-md w-full text-center">
         {/* Icon */}
         <div className="flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mx-auto mb-6">
@@ -101,7 +104,7 @@ const PaymentSuccess = () => {
             <span className="text-gray-700 font-medium">{ticketDetails?.bookedAt}</span>
           </div>
           <div className="flex justify-between text-sm">
-            <span className="text-gray-400">Seats</span>
+            <span className="text-gray-400">Booked Seats Numbers</span>
             <span className="text-gray-700 font-medium">{ticketDetails?.seats?.join(", ")}</span>
           </div>
         </div>
