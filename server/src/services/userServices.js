@@ -215,6 +215,9 @@ async function createPayment(req) {
             bookingId,
             seats: JSON.stringify(seats)
         },
+         payment_intent_data: {
+            metadata: { bookingId: booking.id },
+        },
             success_url: `${process.env.FRONTEND_URL}/success?bookingId=${bookingId}`,
             cancel_url: `${process.env.FRONTEND_URL}/cancel?bookingId=${bookingId}`,
         });
@@ -251,10 +254,10 @@ async function webhookConnection(req) {
             }
         }
         if(event.type === "payment_intent.payment_failed") {
-            const session = event.data.object;
-            const bookingId = session.metadata.bookingId;
+            const paymentIntent = event.data.object;
+            const bookingId = paymentIntent.metadata?.bookingId;
             await Booking.update(
-                { status: "CANCELLED", stripePaymentId: session.payment_intent},
+                { status: "CANCELLED", stripePaymentId: paymentIntent.id},
                 { where: { id: bookingId } }
             );
         }
