@@ -26,11 +26,6 @@ const PaymentSuccess = () => {
             bookedAt: b.createdAt,
             stripePaymentId: b.stripePaymentId,
 
-            userId: b.User?.id,
-            userName: b.User?.userName,
-            email: b.User?.email,
-            phoneNumber: b.User?.phoneNumber,
-
             scheduleId: b.BusSchedule?.id,
             scheduleDate: b.BusSchedule?.scheduleDate,
 

@@ -26,11 +26,6 @@ const PaymentFail = () => {
             totalPrice: b.totalPrice,
             bookedAt: b.createdAt,
 
-            userId: b.User?.id,
-            userName: b.User?.userName,
-            email: b.User?.email,
-            phoneNumber: b.User?.phoneNumber,
-
             scheduleId: b.BusSchedule?.id,
             scheduleDate: b.BusSchedule?.scheduleDate,
 
