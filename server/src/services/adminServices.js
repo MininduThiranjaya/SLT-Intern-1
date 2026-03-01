@@ -210,7 +210,15 @@ async function getStats() {
         ] = await Promise.all([
 
             Bus.count(),
-            User.count(),
+            User.count({
+                distinct: true,
+                col: "User.id",
+                include:[{
+                model: Role,
+                where: {
+                    name: "passenger"
+                }
+            }]}),
             Booking.count(),
             Booking.count({ where: { status: "CONFIRMED" } }),
             Booking.count({ where: { status: "PENDING" } }),
