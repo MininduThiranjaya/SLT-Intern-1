@@ -51,7 +51,7 @@ const PaymentFail = () => {
 
         {/* Buttons */}
         <button 
-          onClick={() => useNavigate('/dashboard')}
+          onClick={() => navigate('/dashboard')}
           className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-xl transition-colors duration-200 mb-3"
         >
           Try Again
