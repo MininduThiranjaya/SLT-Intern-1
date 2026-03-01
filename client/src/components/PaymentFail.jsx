@@ -14,10 +14,10 @@ const PaymentFail = () => {
       try{
         const token = localStorage.getItem('userToken')
         const res = await axios.get(API.user.getSpecificBooking, {
+          params: { bookingId },
           headers: {
             Authorization: `Bearer ${token}`
-          },
-          data: bookingId
+          }
         })
         if(res.data.status) {
           const booking = res.data.result.map((b) => ({

@@ -13,7 +13,8 @@ const PaymentSuccess = () => {
     const fetchBookingDetails = async (bookingId) => {
       try{
         const token = localStorage.getItem('userToken')
-        const res = await axios.get(API.user.getSpecificBooking, bookingId, {
+        const res = await axios.get(API.user.getSpecificBooking, {
+          params: { bookingId },
           headers: {
             Authorization: `Bearer ${token}`
           }
