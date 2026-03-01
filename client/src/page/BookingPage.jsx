@@ -141,8 +141,7 @@ export default function BookingPage({ currentUser }) {
           console.log(res2);
           setLoadig(false)
           window.location.href = res2.data.result.url;
-          setBookingId("BK-" + (Math.floor(Math.random() * 90000) + 10000));
-          setStep(3);
+          handleReset()
         }
       }
     } catch (e) {
@@ -159,7 +158,6 @@ export default function BookingPage({ currentUser }) {
     setChosenSeats([]);
     setPassengerName(currentUser?.userName ?? "");
     setPassengerPhone(currentUser?.phoneNumber ?? "");
-    setBookingId("");
   };
 
   function formatTime12h(time24) {
@@ -408,53 +406,6 @@ export default function BookingPage({ currentUser }) {
               ← Back
             </button>
           </div>
-        </div>
-      )}
-
-      {/* booking Success */}
-      {step === 3 && (
-        <div className={`${S.card} mb-6 text-center`}>
-          <div className="w-16 h-16 bg-green-100 rounded-2xl mx-auto flex items-center justify-center mb-5">
-            <CheckCircle size={32} className="text-green-500" />
-          </div>
-          <h3
-            className="font-bold text-2xl text-[#0d0f1a] mb-1"
-            style={fontSyne}
-          >
-            Booking Confirmed!
-          </h3>
-          <p className="text-[#7a7e96] text-sm mb-2">
-            Your ticket has been booked successfully.
-          </p>
-          <div className="inline-block bg-yellow-50 border border-yellow-200 rounded-xl px-5 py-2 mb-2">
-            <span className="text-[#7a7e96] text-xs">Booking ID: </span>
-            <span className="font-bold text-yellow-600">{bookingId}</span>
-          </div>
-          {chosenSeats.length > 0 && (
-            <div className="flex items-center justify-center gap-1.5 flex-wrap mb-2">
-              <span className="text-[#9a9eb8] text-xs">Seats:</span>
-              {chosenSeats
-                .sort((a, b) => a - b)
-                .map((s) => (
-                  <span
-                    key={s}
-                    className="bg-yellow-100 text-yellow-700 text-xs font-bold px-2 py-0.5 rounded-md border border-yellow-200"
-                  >
-                    {s}
-                  </span>
-                ))}
-            </div>
-          )}
-          <div className="text-sm text-[#7a7e96] mb-6">
-            {selectedBus?.busNumber} · {selectedBus?.from} → {selectedBus?.to} ·{" "}
-            {selectedBus?.departure}
-          </div>
-          <button
-            onClick={handleReset}
-            className={`${S.btnAmber} max-w-xs mx-auto`}
-          >
-            Book Another Journey
-          </button>
         </div>
       )}
 
