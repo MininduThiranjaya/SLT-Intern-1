@@ -34,7 +34,7 @@ function SeatBox({ number, status, onClick }) {
       base + " bg-red-100 border-red-300 text-red-500 cursor-not-allowed",
 
     myBooked:
-      base + " bg-green-100 border-green-400 text-green-600 cursor-not-allowed",
+      base + " bg-blue-200 border-blue-400 text-blue-600 cursor-not-allowed",
 
     selected:
       base +
@@ -46,7 +46,7 @@ function SeatBox({ number, status, onClick }) {
 
     otherBooked: "bg-red-300",
 
-    myBooked: "bg-green-400",
+    myBooked: "bg-blue-400",
 
     selected: "bg-yellow-600/30",
   };
@@ -130,11 +130,7 @@ export default function BusSeatLayout({ bus, onConfirm, onClose }) {
               {[
                 { label: "Total", value: total, cls: "text-[#0d0f1a]" },
                 { label: "Booked", value: booked, cls: "text-rose-500" },
-                {
-                  label: "Available",
-                  value: available,
-                  cls: "text-emerald-600",
-                },
+                { label: "Available", value: available, cls: "text-emerald-600"},
               ].map(({ label, value, cls }) => (
                 <div
                   key={label}
@@ -155,9 +151,10 @@ export default function BusSeatLayout({ bus, onConfirm, onClose }) {
 
             <div className="flex items-center gap-3 mb-2">
               {[
-                { cls: "bg-white border-gray-200", label: "Available" },
+                { cls: "bg-green-500 border-gray-200", label: "Available" },
                 { cls: "bg-yellow-400 border-yellow-400", label: "Selected" },
-                { cls: "bg-gray-100 border-gray-200", label: "Booked" },
+                { cls: "bg-red-300 border-gray-200", label: "Booked" },
+                { cls: "bg-blue-300 border-gray-200", label: "My Bookings" },
               ].map(({ cls, label }) => (
                 <div key={label} className="flex items-center gap-1">
                   <div
