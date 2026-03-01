@@ -103,6 +103,9 @@ async function getUsers() {
                 {
                     model: Booking,
                     attributes: [],
+                    where: {
+                        status: ["PENDING","CONFIRMED"]
+                    },
                     required: false, // include users even if no bookings
                     include: [
                         {
