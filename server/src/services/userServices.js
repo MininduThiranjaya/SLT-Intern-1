@@ -235,18 +235,40 @@ async function webhookConnection(req) {
             sig,
             process.env.STRIPE_WEBHOOK_SECRET
         );
-        if (event.type === "checkout.session.completed") {
+        if(event.type === "checkout.session.completed") {
             const session = event.data.object;
-            const bookingId = session.metadata.bookingId;
-            const [updatedRows] = await Booking.update(
-                { status: "CONFIRMED", stripePaymentId: session.payment_intent},
-                { where: { id: bookingId, status: "PENDING" } }
-            );
-            if (updatedRows > 0) {
-                console.log(`Booking ${bookingId} confirmed`);
-            } else {
-                console.log(`Booking ${bookingId} already confirmed or not found`);
+            if (session.payment_status === "paid") {
+                const bookingId = session.metadata.bookingId;
+                const [updatedRows] = await Booking.update(
+                    { status: "CONFIRMED", stripePaymentId: session.payment_intent},
+                    { where: { id: bookingId, status: "PENDING" } }
+                );
+                if (updatedRows > 0) {
+                    console.log(`Booking ${bookingId} confirmed`);
+                } else {
+                    console.log(`Booking ${bookingId} already confirmed or not found`);
+                }
             }
+        }
+        if(event.type === "payment_intent.payment_failed") {
+            const paymentIntent = event.data.object;
+
+            const bookingId = paymentIntent.metadata.bookingId;
+
+            await Booking.update(
+                { status: "CANCELLED" },
+                { where: { id: bookingId } }
+            );
+        }
+        if(event.type === "checkout.session.expired") {
+            const session = event.data.object;
+
+            const bookingId = session.metadata.bookingId;
+
+            await Booking.update(
+                { status: "CANCELLED" },
+                { where: { id: bookingId } }
+            );
         }
         return {statusCode: 200, status: true, message: "Webhook success", data:{received: true}}
     } catch (e) {
