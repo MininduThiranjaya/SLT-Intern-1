@@ -104,7 +104,7 @@ async function busSeatBooking(req) {
             },
             include: {
                 model: Booking,
-                where: { scheduleId }
+                where: { scheduleId: scheduleId, status: ["PENDING","CONFIRMED"]}
             },
             transaction: t
         });
