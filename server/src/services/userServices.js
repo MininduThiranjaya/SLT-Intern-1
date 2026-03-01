@@ -252,7 +252,7 @@ async function webhookConnection(req) {
         }
         if(event.type === "payment_intent.payment_failed") {
             const session = event.data.object;
-            const bookingId = paymentIntent.metadata.bookingId;
+            const bookingId = session.metadata.bookingId;
             await Booking.update(
                 { status: "CANCELLED", stripePaymentId: session.payment_intent},
                 { where: { id: bookingId } }
