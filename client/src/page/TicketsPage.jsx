@@ -82,6 +82,10 @@ export default function TicketsPage() {
   }
 };
 
+  function formatDate(dateTime) {
+    return new Date(dateTime).toLocaleString();
+  }
+
   useEffect(() => {
     featchBookings();
   }, []);
@@ -161,7 +165,7 @@ export default function TicketsPage() {
                       <div className="text-gray-400 text-xs mb-0.5">
                         Travel Date
                       </div>
-                      <div className="text-black text-sm">{b.scheduleDate}</div>
+                      <div className="text-black text-sm">{formatDate(b.scheduleDate)}</div>
                     </div>
                     <div>
                       <div className="text-gray-400 text-xs mb-0.5">
