@@ -40,7 +40,7 @@ export default function Overview() {
     },
     {
       label: "Registered Users",
-      value: dashBoard?.rejectedBookings || 0,
+      value: dashBoard?.totalUsers || 0,
       icon: Users,
       up: true,
     },
