@@ -235,6 +235,7 @@ async function webhookConnection(req) {
             sig,
             process.env.STRIPE_WEBHOOK_SECRET
         );
+        console.log(event.type)
         if(event.type === "checkout.session.completed") {
             const session = event.data.object;
             if (session.payment_status === "paid") {
