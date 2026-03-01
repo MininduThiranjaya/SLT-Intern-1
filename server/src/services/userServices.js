@@ -216,15 +216,15 @@ async function createPayment(req) {
             seats: JSON.stringify(seats)
         },
          payment_intent_data: {
-            metadata: { bookingId: booking.id },
+            metadata: { bookingId: bookingId},
         },
             success_url: `${process.env.FRONTEND_URL}/success?bookingId=${bookingId}`,
             cancel_url: `${process.env.FRONTEND_URL}/cancel?bookingId=${bookingId}`,
         });
         return {statusCode: 200, status: true, message: "No user booking found", data:{url: session.url} }
-    } catch (err) {
-        console.log(err);
-        res.status(500).json({ status: false, message: "Failed to create checkout session" });
+    } catch (e) {
+        console.log(e);
+        return {statusCode: 200, status: true, message: "Failed to create checkout session", data:null };
     }
 }
 
