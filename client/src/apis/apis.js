@@ -13,7 +13,8 @@ const API = {
         seatBooking: `${commonUrl}user/bus-seat-booking`,
         deleteUser: `${commonUrl}user/delete-my-account`,
         getMyBookings: `${commonUrl}user/get-my-bookings`,
-        createPayment: `${commonUrl}user/create-payment`
+        createPayment: `${commonUrl}user/create-payment`,
+        getSpecificBooking: `${commonUrl}user/get-specific-booking`,
     }
 }
 
