@@ -1,4 +1,4 @@
-import { Eye, EyeOff, Mail, Lock, KeyRound, ArrowLeft, ShieldCheck } from "lucide-react"
+import { Eye, EyeOff, Mail, Lock, KeyRound, ArrowLeft, ShieldCheck, Check } from "lucide-react"
 import React, { useState } from "react"
 import axios from "axios"
 import API from "../apis/apis"
@@ -67,14 +67,14 @@ export default function ForgetPasswordPage() {
         <div className="bg-[#1c1f2e] rounded-2xl shadow-2xl border border-gray-100 overflow-hidden">
 
           {/* Card Header */}
-          <div className="bg-gradient-to-r from-[#007bff] to-[#0056d2] px-6 py-5 text-center">
+          <div className="bg-yellow-500 px-6 py-5 text-center">
             <div className="inline-flex items-center justify-center w-11 h-11 bg-white/20 rounded-full mb-2">
               {step === 1 ? <Mail className="w-5 h-5 text-white" /> : <ShieldCheck className="w-5 h-5 text-white" />}
             </div>
             <h1 className="text-xl font-bold text-white mb-0.5" style={{ fontFamily: "var(--font-urbanist)" }}>
               Reset Password
             </h1>
-            <p className="text-blue-100 text-xs" style={{ fontFamily: "var(--font-urbanist)" }}>
+            <p className="text-white text-xs" style={{ fontFamily: "var(--font-urbanist)" }}>
               {step === 1 ? "Enter your email to receive a verification code" : "Enter the code and set your new password"}
             </p>
           </div>
@@ -85,7 +85,7 @@ export default function ForgetPasswordPage() {
               <React.Fragment key={s}>
                 <div className="flex items-center gap-2">
                   <div className={`w-6 h-6 rounded-full flex items-center justify-center text-xs font-bold transition-all ${step >= s ? 'bg-[#007bff] text-white shadow-md shadow-blue-200' : 'bg-gray-200 text-gray-500'}`}>
-                    {step > s ? '✓' : s}
+                    {step > s ? (<Check size={20} className="text-white" />) : s}
                   </div>
                   <span className={`text-xs font-medium hidden sm:block ${step >= s ? 'text-[#007bff]' : 'text-gray-400'}`} style={{ fontFamily: "var(--font-urbanist)" }}>
                     {s === 1 ? 'Email' : 'Reset'}

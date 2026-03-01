@@ -98,14 +98,14 @@ export default function RegistrationPage() {
                      rounded-2xl shadow-2xl overflow-hidden">
 
             {/* Card Header */}
-            <div className="bg-gradient-to-r from-[#007bff] to-[#0056d2] px-6 py-5 text-center">
+            <div className="bg-yellow-500 px-6 py-5 text-center">
                 <div className="inline-flex items-center justify-center w-11 h-11 bg-white/20 rounded-full mb-2">
                     <UserPlus className="w-5 h-5 text-white" />
                 </div>
                 <h1 className="text-xl font-bold text-white mb-0.5" style={{ fontFamily: "var(--font-urbanist)" }}>
                     Create Account
                 </h1>
-                <p className="text-blue-100 text-xs" style={{ fontFamily: "var(--font-urbanist)" }}>
+                <p className="text-white text-xs" style={{ fontFamily: "var(--font-urbanist)" }}>
                     Fill in your details to get started
                 </p>
             </div>
