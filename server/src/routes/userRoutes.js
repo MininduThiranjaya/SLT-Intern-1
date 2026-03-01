@@ -28,7 +28,7 @@ router.post('/create-payment', verifyToken, async (req, res) => {
         return res.status(result.statusCode).json({status: result.status, message: result.message ?? null, result: result.data ?? null})
 })
 
-router.get('/get-specific-booking', verifyToken, async (req, res) => {
+router.get('/get-specific-booking', async (req, res) => {
         const result = await getSpecificBookingDetails(req)
         return res.status(result.statusCode).json({status: result.status, message: result.message ?? null, result: result.data ?? null})
 })
