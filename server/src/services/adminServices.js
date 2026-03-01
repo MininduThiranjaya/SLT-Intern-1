@@ -212,7 +212,7 @@ async function getStats() {
             Bus.count(),
             User.count({
                 distinct: true,
-                col: "User.id",
+                col: "id",
                 include:[{
                 model: Role,
                 where: {
