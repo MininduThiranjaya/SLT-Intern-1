@@ -5,6 +5,8 @@ import API from "../apis/apis";
 
 export default function TicketsPage() {
   const [myBookings, setMyBookings] = useState([]);
+  const [loading, setLoadig] = useState(false)
+
   async function featchBookings() {
     try {
       const token = localStorage.getItem("userToken");
@@ -42,12 +44,44 @@ export default function TicketsPage() {
     }
   }
 
+  const makePayment = async (b) => {
+    try{
+        setLoadig(true)
+        const token = localStorage.getItem('userToken')
+        const res2 = await axios.post(API.user.createPayment, {
+        bookingId: b.bookingId,
+        totalPrice: b.totalPrice,
+        seats: b.seats,
+        busNumber: b.busNumber
+       }, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (res2.data.status) {
+          console.log(res2);
+          setLoadig(false)
+          window.location.href = res2.data.result.url;
+        }
+    }
+    catch(e) {
+      setLoadig(false)
+    }
+  } 
+
   useEffect(() => {
     featchBookings();
   }, []);
 
   return (
     <div>
+      {
+        loading && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+            <div className="w-16 h-16 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )
+      }
       <div className="mb-8">
         <p className="text-[0.75rem] text-yellow-500 tracking-[0.1em] uppercase font-semibold mb-1">
           Journey history
@@ -75,7 +109,7 @@ export default function TicketsPage() {
                       {b.busNumber}
                     </span>
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border border-yellow-300 bg-yellow-400 text-black">
-                      {b.status}
+                      {b.status}  {b.status == "PENDING" && "If you unable to pay within an hour the reservation will be canceled(It will be available to someone to book the seats)"}
                     </span>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
@@ -125,8 +159,18 @@ export default function TicketsPage() {
                       </div>
                     </div>
                   </div>
-                  <div className="text-gray-400 text-xs mt-3">
-                    Booked on {b.bookedAt}
+                  <div className="flex flex-row justify-between">
+                    <div className="text-gray-400 text-xs mt-3">
+                      Booked on {b.bookedAt}
+                    </div>
+                    <div>
+                      {b.status == "PENDING" && <button
+                        onClick={() => makePayment(b)}
+                        className="rounded-full p-2 border border-yellow-200 bg-yellow-300 text-black"
+                      >
+                        Make Payment
+                      </button>}
+                    </div>
                   </div>
                 </div>
               </div>
