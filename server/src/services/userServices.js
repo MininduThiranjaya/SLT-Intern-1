@@ -215,8 +215,8 @@ async function createPayment(req) {
             bookingId,
             seats: JSON.stringify(seats)
         },
-            success_url: `${process.env.FRONTEND_URL}/success`,
-            cancel_url: `${process.env.FRONTEND_URL}/cancel`,
+            success_url: `${process.env.FRONTEND_URL}/success?bookingId=${bookingId}`,
+            cancel_url: `${process.env.FRONTEND_URL}/cancel?bookingId=${bookingId}`,
         });
         return {statusCode: 200, status: true, message: "No user booking found", data:{url: session.url} }
     } catch (err) {
