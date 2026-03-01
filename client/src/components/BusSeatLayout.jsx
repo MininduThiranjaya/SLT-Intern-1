@@ -151,7 +151,7 @@ export default function BusSeatLayout({ bus, onConfirm, onClose }) {
 
             <div className="flex items-center gap-3 mb-2">
               {[
-                { cls: "bg-green-500 border-gray-200", label: "Available" },
+                { cls: "bg-gray-100 border-gray-400", label: "Available" },
                 { cls: "bg-yellow-400 border-yellow-400", label: "Selected" },
                 { cls: "bg-red-300 border-gray-200", label: "Booked" },
                 { cls: "bg-blue-300 border-gray-200", label: "My Bookings" },
