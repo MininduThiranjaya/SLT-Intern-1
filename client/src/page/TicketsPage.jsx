@@ -69,6 +69,19 @@ export default function TicketsPage() {
     }
   } 
 
+  const getStatusStyle = (status) => {
+  switch (status) {
+    case "CONFIRMED":
+      return "border-green-300 bg-green-400 text-black";
+    case "PENDING":
+      return "border-blue-300 bg-blue-400 text-white";
+    case "CANCELLED":
+      return "border-red-300 bg-red-400 text-white";
+    default:
+      return "border-gray-300 bg-gray-400 text-white";
+  }
+};
+
   useEffect(() => {
     featchBookings();
   }, []);
@@ -108,7 +121,7 @@ export default function TicketsPage() {
                     <span className="text-black font-mono font-medium text-sm">
                       {b.busNumber}
                     </span>
-                    <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border border-yellow-300 bg-yellow-400 text-black">
+                    <span className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border ${getStatusStyle(b.status)}`}>
                       {b.status} 
                     </span>
                     <span className="text-xs">
