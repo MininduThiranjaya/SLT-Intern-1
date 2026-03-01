@@ -165,7 +165,7 @@ export default function TicketsPage() {
                       <div className="text-gray-400 text-xs mb-0.5">
                         Travel Date
                       </div>
-                      <div className="text-black text-sm">{formatDate(b.scheduleDate)}</div>
+                      <div className="text-black text-sm">{b.scheduleDate}</div>
                     </div>
                     <div>
                       <div className="text-gray-400 text-xs mb-0.5">
@@ -181,7 +181,7 @@ export default function TicketsPage() {
                   </div>
                   <div className="flex flex-row justify-between">
                     <div className="text-gray-400 text-xs mt-3">
-                      Booked on {b.bookedAt}
+                      Booked on {formatDate(b.bookedAt)}
                     </div>
                     <div>
                       {b.status == "PENDING" && <button
