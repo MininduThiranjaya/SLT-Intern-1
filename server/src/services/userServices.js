@@ -235,7 +235,6 @@ async function webhookConnection(req) {
             sig,
             process.env.STRIPE_WEBHOOK_SECRET
         );
-        console.log(event.type)
         if(event.type === "checkout.session.completed") {
             const session = event.data.object;
             if (session.payment_status === "paid") {
@@ -252,7 +251,7 @@ async function webhookConnection(req) {
             }
         }
         if(event.type === "payment_intent.payment_failed") {
-            const paymentIntent = event.data.object;
+            const session = event.data.object;
             const bookingId = paymentIntent.metadata.bookingId;
             await Booking.update(
                 { status: "CANCELLED", stripePaymentId: session.payment_intent},
