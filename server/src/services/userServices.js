@@ -276,4 +276,45 @@ async function webhookConnection(req) {
     }
 }
 
-module.exports = {searchSchedule, busSeatBooking, deleteMyAccount, getMyBookings, createPayment, webhookConnection}
+async function getSpecificBookingDetails(req) {
+    try {
+        const {bookingId} = req.body
+        const {email} = req.user
+        if(!email || !bookingId) return {statusCode: 401, status: false, message: "All fields are required", data: null}
+        const tempAllBookings = await Booking.findAll({
+            where:{
+                id: bookingId
+            },
+            include: [
+                {
+                    model: User,
+                    attributes: ['id', 'userName', 'email', 'phoneNumber'],
+                    where: {
+                        email: email
+                    }
+                },
+                {
+                    model:BusSchedule,
+                    include: [
+                        {
+                            model:Bus,
+                            attributes: ["busNumber", "from", "to", "departure", "arrival", 'price']
+                        }
+                    ]
+                },
+                {
+                    model: BookingSeat,
+                    attributes: ['seatNumber']
+                }
+            ],
+            order: [['createdAt', 'DESC']]
+        })
+        if(tempAllBookings.length == 0) return {statusCode: 200, status: true, message: "No user booking found", data:null }
+        return {statusCode: 200, status: true, message: "Fetach all user bookings", data: tempAllBookings }
+    } catch (e) {
+        console.log(e)
+        return {statusCode: 500, status: false, message: "Internal server error", data: null};
+    }
+}
+
+module.exports = {searchSchedule, busSeatBooking, deleteMyAccount, getMyBookings, createPayment, webhookConnection, getSpecificBookingDetails}
