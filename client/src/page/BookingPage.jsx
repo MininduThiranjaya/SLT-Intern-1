@@ -30,6 +30,7 @@ export default function BookingPage({ currentUser }) {
     currentUser?.phoneNumber ?? "",
   );
   const [bookingId, setBookingId] = useState("");
+  const [loading, setLoadig] = useState(false)
 
   // seat layout modal
   const [showSeatLayout, setShowSeatLayout] = useState(false);
@@ -39,6 +40,7 @@ export default function BookingPage({ currentUser }) {
   // handlers
   const handleSearch = async () => {
     try {
+      setLoadig(true)
       const token = localStorage.getItem("userToken");
       if (!fromCity || !toCity || !travelDate) return;
       const res = await axios.post(
@@ -80,6 +82,7 @@ export default function BookingPage({ currentUser }) {
           status: bus.isAvailable,
         })),
       );
+      setLoadig(false)
       setSearchResults(schedules);
       setSelectedBus(null);
       setStep(1);
@@ -111,6 +114,7 @@ export default function BookingPage({ currentUser }) {
 
   const handleConfirm = async () => {
     try {
+      setLoadig(true)
       const token = localStorage.getItem("userToken");
       if (!selectedBus.busNumber || !selectedBus.scheduleId || !chosenSeats)
         return;
@@ -135,6 +139,7 @@ export default function BookingPage({ currentUser }) {
         });
         if (res2.data.status) {
           console.log(res2);
+          setLoadig(false)
           window.location.href = res2.data.result.url;
           setBookingId("BK-" + (Math.floor(Math.random() * 90000) + 10000));
           setStep(3);
@@ -184,6 +189,14 @@ export default function BookingPage({ currentUser }) {
 
   return (
     <div>
+      {
+        loading && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+            <div className="w-16 h-16 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )
+      }
+
       {/* seat layout */}
       {showSeatLayout && pendingBus && (
         <BusSeatLayout
