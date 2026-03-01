@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom";
 
 const PaymentSuccess = () => {
   const navigate = useNavigate()
+  const params = new URLSearchParams(window.location.search);
   const bookingId = params.get("bookingId");
   console.log(bookingId)
   return (
