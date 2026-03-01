@@ -8,10 +8,12 @@ const PaymentSuccess = () => {
   const params = new URLSearchParams(window.location.search);
   const [ticketDetails, setTicketDetails] = useState("")
   const bookingId = params.get("bookingId");
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     const fetchBookingDetails = async (bookingId) => {
       try{
+        useState(true)
         const token = localStorage.getItem('userToken')
         const res = await axios.get(API.user.getSpecificBooking, {
           params: { bookingId },
@@ -25,7 +27,6 @@ const PaymentSuccess = () => {
             status: b.status,
             totalPrice: b.totalPrice,
             bookedAt: b.createdAt,
-            stripePaymentId: b.stripePaymentId,
 
             scheduleId: b.BusSchedule?.id,
             scheduleDate: b.BusSchedule?.scheduleDate,
@@ -40,9 +41,11 @@ const PaymentSuccess = () => {
             seats: b.BookingSeats?.map((s) => s.seatNumber) || [],
           }));
           setTicketDetails(booking)
+          setLoading(false)
         }
       }
       catch(e){
+          setLoading(false)
       }
     }
 
@@ -50,6 +53,13 @@ const PaymentSuccess = () => {
   }, [bookingId])
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
+       {
+        loading && (
+          <div className="fixed inset-0 bg-black bg-opacity-40 flex items-center justify-center z-50">
+            <div className="w-16 h-16 border-4 border-yellow-400 border-t-transparent rounded-full animate-spin"></div>
+          </div>
+        )
+      }
       <div className="bg-white rounded-2xl shadow-lg p-10 max-w-md w-full text-center">
         {/* Icon */}
         <div className="flex items-center justify-center w-20 h-20 rounded-full bg-green-100 mx-auto mb-6">
