@@ -257,7 +257,7 @@ async function webhookConnection(req) {
             const paymentIntent = event.data.object;
             const bookingId = paymentIntent.metadata?.bookingId;
             await Booking.update(
-                { status: "CANCELLED", stripePaymentId: paymentIntent.id},
+                { status: "PENDING", stripePaymentId: paymentIntent.id},
                 { where: { id: bookingId } }
             );
         }
@@ -265,7 +265,7 @@ async function webhookConnection(req) {
             const session = event.data.object;
             const bookingId = session.metadata.bookingId;
             await Booking.update(
-                { status: "CANCELLED", stripePaymentId: session.payment_intent},
+                { status: "PENDING", stripePaymentId: session.payment_intent},
                 { where: { id: bookingId } }
             );
         }
