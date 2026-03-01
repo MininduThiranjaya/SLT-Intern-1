@@ -2,6 +2,7 @@ const {Bus, BusSchedule, User, BookingSeat, Booking} = require('../models/index'
 require('dotenv')
 const seqConnection = require('../db/dbConnection')
 const Stripe = require('stripe')
+const { where } = require('sequelize')
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY)
 
 // search schedule
@@ -40,6 +41,9 @@ async function searchSchedule(req) {
                     model: Booking,
                     required: false,
                     attributes: ['id', 'userId'],
+                    where: {
+                        status: ["PENDING","CONFIRMED"]
+                    },
                     include: {
                         model: BookingSeat,
                         attributes: ['seatNumber']
