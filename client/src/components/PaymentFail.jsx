@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 
 const PaymentFail = () => {
   const navigate = useNavigate()
+  const bookingId = params.get("bookingId");
+  console.log(bookingId)
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-lg p-10 max-w-md w-full text-center">
@@ -48,7 +50,7 @@ const PaymentFail = () => {
 
         {/* Buttons */}
         <button 
-          onClick={() => useNavigate('dashboard')}
+          onClick={() => useNavigate('/dashboard')}
           className="w-full bg-red-500 hover:bg-red-600 text-white font-semibold py-3 rounded-xl transition-colors duration-200 mb-3"
         >
           Try Again

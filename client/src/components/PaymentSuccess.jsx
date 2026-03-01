@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 
 const PaymentSuccess = () => {
   const navigate = useNavigate()
+  const bookingId = params.get("bookingId");
+  console.log(bookingId)
   return (
     <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
       <div className="bg-white rounded-2xl shadow-lg p-10 max-w-md w-full text-center">
