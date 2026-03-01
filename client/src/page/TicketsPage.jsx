@@ -109,7 +109,10 @@ export default function TicketsPage() {
                       {b.busNumber}
                     </span>
                     <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-medium border border-yellow-300 bg-yellow-400 text-black">
-                      {b.status}  {b.status == "PENDING" && "If you unable to pay within an hour the reservation will be canceled(It will be available to someone to book the seats)"}
+                      {b.status} 
+                    </span>
+                    <span className="text-xs">
+                      {b.status == "PENDING" && "If you unable to pay within an hour the reservation will be canceled (It will be available to someone to book)"}
                     </span>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
