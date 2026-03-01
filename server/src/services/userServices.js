@@ -252,21 +252,17 @@ async function webhookConnection(req) {
         }
         if(event.type === "payment_intent.payment_failed") {
             const paymentIntent = event.data.object;
-
             const bookingId = paymentIntent.metadata.bookingId;
-
             await Booking.update(
-                { status: "CANCELLED" },
+                { status: "CANCELLED", stripePaymentId: session.payment_intent},
                 { where: { id: bookingId } }
             );
         }
         if(event.type === "checkout.session.expired") {
             const session = event.data.object;
-
             const bookingId = session.metadata.bookingId;
-
             await Booking.update(
-                { status: "CANCELLED" },
+                { status: "CANCELLED", stripePaymentId: session.payment_intent},
                 { where: { id: bookingId } }
             );
         }
