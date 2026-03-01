@@ -91,7 +91,7 @@ const PaymentFail = () => {
         <div className="text-left space-y-3 mb-8 border-t border-gray-100 pt-6">
           <div className="flex justify-between text-sm">
             <span className="text-gray-400">Transaction ID</span>
-            <span className="text-gray-700 font-medium">{ticketDetails?.stripePaymentId}</span>
+            <span className="text-gray-700 font-medium">{ticketDetails?.stripePaymentId ? ticketDetails?.stripePaymentId : "No Transaction Id"}</span>
           </div>
           <div className="flex justify-between text-sm">
             <span className="text-gray-400">Bus Number</span>
