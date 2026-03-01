@@ -3,7 +3,7 @@ const cors = require("cors");
 require("dotenv").config();
 const app = express();
 const PORT = process.env.PORT;
-import { startAutoCancelJob } from "./src/auto/automation";
+const { startAutoCancelJob } = require("./src/auto/automation");
 
 // // routes
 const commonRoutes = require("./src/routes/commonRoutes");

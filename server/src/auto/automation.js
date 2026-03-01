@@ -1,9 +1,9 @@
 const express = require("express");
-const corn = require("node-cron");
+const cron = require("node-cron");
 const { Op } = require("sequelize");
 const { Booking } = require("../models/index");
 
-export const startAutoCancelJob = () => {
+const startAutoCancelJob = () => {
   cron.schedule("*/5 * * * *", async () => {
     try {
       const oneHour = new Date(Date.now() - 60 * 60 * 1000);
@@ -24,3 +24,5 @@ export const startAutoCancelJob = () => {
   });
   console.log("Automation started via corn job");
 };
+
+module.exports = {startAutoCancelJob}
