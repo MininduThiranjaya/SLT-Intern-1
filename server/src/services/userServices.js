@@ -279,20 +279,12 @@ async function webhookConnection(req) {
 async function getSpecificBookingDetails(req) {
     try {
         const {bookingId} = req.body
-        const {email} = req.user
-        if(!email || !bookingId) return {statusCode: 401, status: false, message: "All fields are required", data: null}
+        if(!bookingId) return {statusCode: 401, status: false, message: "All fields are required", data: null}
         const tempAllBookings = await Booking.findAll({
             where:{
                 id: bookingId
             },
             include: [
-                {
-                    model: User,
-                    attributes: ['id', 'userName', 'email', 'phoneNumber'],
-                    where: {
-                        email: email
-                    }
-                },
                 {
                     model:BusSchedule,
                     include: [
